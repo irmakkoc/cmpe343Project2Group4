@@ -1,4 +1,4 @@
-package cmpe343project2;
+package cmpe343project2group4;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,39 +8,85 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 
-	public class cmpe343project2 {
+	public class cmpe343project2group4 {
 
-	    private static final String URL = "jdbc:mysql://localhost:3306/firmmanagement"; 
+	    private static final String URL = "jdbc:mysql://localhost:3306/firm_management"; 
 	    private static final String USER = "root"; 
-	    private static final String PASSWORD = "Irmak2003";
+	    private static final String PASSWORD = "277353MYSQL.";
 	    
 	    private static Connection connect() throws SQLException {
 	        return DriverManager.getConnection(URL, USER, PASSWORD);
 	    }
 
-	    public static void login() {
+	    public abstract class Employee {
+	        protected int employee_id;
+	        protected String name;
+	        protected String surname;
+	        protected String username;
+	        protected String role;
+
+	        public Employee(int employee_id, String name, String surname, String username, String role) {
+	            this.employee_id = employee_id;
+	            this.name = name;
+	            this.surname = surname;
+	            this.username = username;
+	            this.role = role;
+	        }
+
+	        public abstract void showMenu();
+	    }
+	    
+	   
+
+	    public class Manager extends Employee {
+	        public Manager(int employee_id, String name, String surname, String username) {
+	            super(employee_id, name, surname, username, "manager");
+	        }
+
+	        @Override
+	        public void showMenu() {
+	           
+	            showManagerMenu(username);
+	        }
+	    }
+	    
+
+	    public class RegularEmployee extends Employee {
+	        public RegularEmployee(int employee_id, String name, String surname, String username) {
+	            super(employee_id, name, surname, username, "regular");
+	        }
+
+	        @Override
+	        public void showMenu() {
+	           
+	            showRegularMenu(username);
+	        }
+	    }
+
+
+
+
+	    public void login() {
 	        Scanner scanner = new Scanner(System.in);
-		    // Exit option at the start of the program
+	        
 	        while (true) {
 	            System.out.print("Do you want to exit? (Y/N): ");
 	            String exitChoice = scanner.nextLine().toUpperCase();
 	            
 	            if (exitChoice.equals("Y")) {
 	            	System.out.println("Exiting the program. Goodbye!");
-	                System.exit(0); // Terminates the program
+	                System.exit(0); 
 	            } else if(exitChoice.equals("N")) {
 	            	break;
 	            } else {
 	                System.out.println("Couldn't understand your choice. Please enter 'Y' for exit or 'N' to continue.");
 	            }
 	        }
-		    
-	        boolean isAuthenticated = false;
-
-	        while (!isAuthenticated) {
-	            System.out.print("Please enter your username: ");
+	        
+	        while (true) {
+	            System.out.print("Username: ");
 	            String username = scanner.nextLine();
-	            System.out.print("Please enter your password: ");
+	            System.out.print("Password: ");
 	            String password = scanner.nextLine();
 
 	            String query = "SELECT * FROM employees WHERE username = ? AND password = ?";
@@ -49,27 +95,35 @@ import java.util.Scanner;
 
 	                preparedStatement.setString(1, username);
 	                preparedStatement.setString(2, password);
+
 	                ResultSet resultSet = preparedStatement.executeQuery();
 
-	                
 	                if (resultSet.next()) {
-	                    
-	                    String role = resultSet.getString("role");
+	                    int employee_id = resultSet.getInt("employee_id");
 	                    String name = resultSet.getString("name");
 	                    String surname = resultSet.getString("surname");
+	                    String role = resultSet.getString("role");
+	                    boolean first_login = resultSet.getBoolean("first_login");
 
 	                    System.out.println("Welcome, " + name + " " + surname);
 
-	                    if ("manager".equals(role)) {
-	                        showManagerMenu(username);
-	                    } else {
-	                        showRegularMenu(username);
+	                    if (first_login) {
+	                        System.out.println("This is your first login. You must update your password.");
+	                        updatePasswordOnFirstLogin(username);
 	                    }
 
-	                    
-	                    isAuthenticated = true;
+	                 
+	                    Employee employee;
+	                    if ("manager".equals(role)) {
+	                        employee = new Manager(employee_id, name, surname, username);
+	                    } else {
+	                        employee = new RegularEmployee(employee_id, name, surname, username);
+	                    }
+
+	                    employee.showMenu(); 
+	                    return; 
 	                } else {
-	                    System.out.println("Invalid username or password! Please try again.");
+	                    System.out.println("Invalid credentials. Try again.");
 	                }
 	            } catch (SQLException e) {
 	                System.out.println("Database error: " + e.getMessage());
@@ -79,56 +133,40 @@ import java.util.Scanner;
 
 
 	    public static void showManagerMenu(String username) {
-            Scanner scanner = new Scanner(System.in);
-            while (true) {
-                System.out.println("\n--- Manager Menu ---");
-                System.out.println("1. Update Own Profile");
-                System.out.println("2. Display All Employees");
-                System.out.println("3. Display Employees with the Role");
-                System.out.println("4. Display Employee with Username");
-                System.out.println("5. Update Employee Non-Profile Fields");
-                System.out.println("6. Hire Employee");
-                System.out.println("7. Fire Employee");
-                System.out.println("8. Run Algorithms");
-                System.out.println("9. Logout");
-                System.out.print("Seçiminiz: ");
-        
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Enter temizle
-        
-                switch (choice) {
-                    case 1:
-                        updateProfile(username);
-                        break;
-                    case 2:
-                        displayAllEmployees();
-                        break;
-                    case 3:
-                        displayEmployeesWithRole();
-                        break;
-                    case 4:
-                        displayEmployeeWithUsername();
-                        break;
-                    case 5:
-                        updateEmployeeNonProfileFields();
-                        break;
-                    case 6:
-                        hireEmployee();
-                        break;
-                    case 7:
-                        fireEmployee();
-                        break;
-                    //case 8:
-                        //runAlgorithms();
-                        //break;
-                    case 9:
-                        logout();
-                        return; // Return to login
-                    default:
-                        System.out.println("Invalid choice. Try again.");
-                }
-            }
-        }
+	        Scanner scanner = new Scanner(System.in);
+	        while (true) {
+	            System.out.println("\n--- Manager Menu ---");
+	            System.out.println("1. Display All Employees");
+	            System.out.println("2. Update Employee Non-Profile Fields");
+	            System.out.println("3. Hire Employee");
+	            System.out.println("4. Fire Employee");
+	            System.out.println("5. Logout");
+	            System.out.print("Seçiminiz: ");
+
+	            int choice = scanner.nextInt();
+	            scanner.nextLine(); 
+
+	            switch (choice) {
+	                case 1:
+	                    displayAllEmployees();
+	                    break;
+	                case 2:
+	                    updateEmployeeNonProfileFields();
+	                    break;
+	                case 3:
+	                    hireEmployee();
+	                    break;
+	                case 4:
+	                    fireEmployee();
+	                    break;
+	                case 5:
+	                    logout();
+	                    return; 
+	                default:
+	                    System.out.println("Invalid cohice. Try again.");
+	            }
+	        }
+	    }
 
 	    
 	    public static void showRegularMenu(String username) {
@@ -152,7 +190,7 @@ import java.util.Scanner;
 	                    break;
 	                case 3:
 	                    logout();
-	                    return; // return to login
+	                    return; 
 	                default:
 	                    System.out.println("Geçersiz seçim. Tekrar deneyin.");
 	            }
@@ -162,10 +200,10 @@ import java.util.Scanner;
 	    
 	    public static void logout() {
 	        System.out.println("Sistemden çıkış yapılıyor...\n");
-	        login(); // return to login
+	        cmpe343project2group4 instance = new cmpe343project2group4(); 
+	        instance.login();
 	    }
 
-	    // Manager menu operations
 	    private static void displayAllEmployees() {
 	        String query = "SELECT * FROM employees";
 	        try (Connection connection = connect();
@@ -197,9 +235,8 @@ import java.util.Scanner;
 	        System.out.println("Çalışan çıkarılıyor...");
 	    }
 
-	    // Regular Employee Menu Operations
 	    private static void displayProfile(String username) {
-	        String query = "SELECT password, phone_no, e_mail FROM employees WHERE username = ?";
+	        String query = "SELECT password, phone_no, email FROM employees WHERE username = ?";
 	        try (Connection connection = connect();
 	             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -210,7 +247,7 @@ import java.util.Scanner;
 	                System.out.println("\n--- Profile Information ---");
 	                System.out.println("Password: " + resultSet.getString("password"));
 	                System.out.println("Phone Number: " + resultSet.getString("phone_no"));
-	                System.out.println("E-mail: " + resultSet.getString("e_mail"));
+	                System.out.println("E-mail: " + resultSet.getString("email"));
 	            } else {
 	                System.out.println("Profil bilgisi bulunamadı.");
 	            }
@@ -257,6 +294,33 @@ import java.util.Scanner;
 	        }
 	    }
 	    
+	    private static void updatePasswordOnFirstLogin(String username) {
+	        Scanner scanner = new Scanner(System.in);
+
+	        System.out.print("Enter your new password: ");
+	        String newPassword = scanner.nextLine();
+
+	        String query = "UPDATE employees SET password = ?, first_login = FALSE WHERE username = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+	            preparedStatement.setString(1, newPassword);
+	            preparedStatement.setString(2, username);
+
+	            int rowsAffected = preparedStatement.executeUpdate();
+	            if (rowsAffected > 0) {
+	                System.out.println("Password updated successfully. Proceeding to the menu.");
+	            } else {
+	                System.out.println("Failed to update password. Contact the administrator.");
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
+	    }
+
+	    
+	    
+	    
 	    private static void updateField(String username, String fieldName, String newValue) {
 	        String query = "UPDATE employees SET " + fieldName + " = ? WHERE username = ?";
 	        try (Connection connection = connect();
@@ -277,6 +341,7 @@ import java.util.Scanner;
 	    }
 
 	    public static void main(String[] args) {
-	        login();
+	    	cmpe343project2group4 instance = new cmpe343project2group4(); 
+	        instance.login();
 	    }
 	}
