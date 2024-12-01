@@ -614,6 +614,223 @@ import java.util.Scanner;
 	    }
 
 
+	    public static void runAlgorithms() {
+	        do {
+	            int valid = 1; //for exiting this should turn 0
+	            switch (input)
+	            Scanner scanner = new Scanner(System.in);
+	            int size = readInputAlgo(scanner);
+	            long startTime, endTime, exeStartTime, exeEndTime;
+	            exeStartTime = System.nanoTime();
+
+	            int[] randomArray = generateRandomArray(size);
+	            int[] radixArray = new int[size];
+	            int[] shellArray = new int[size];
+	            int[] heapArray = new int[size];
+	            int[] insertionArray = new int[size];
+	            copyArrays(randomArray);
+	            calculateDuration();
+	            exeEndTime = System.nanoTime();
+	            System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
+	            valid = readInput(scanner);
+	        } while(valid !=0 )
+
+	    }
+	    public static int[] generateRandomArray(int size) // size 1000-10000 arasinda olacak. 
+	    {
+	        Random rand = new Random();
+	        int[] array = new int[size];
+	        for (int i = 0; i < size; i++)
+	        {
+	            array[i] = rand.nextInt(20001) - 10000;
+	        }
+	        return array;
+	    }
+
+	    private static void countingSort(int[] array) {
+	        int[] result = new int[array.length];
+	        int[] count = new int [10];
+	        int place = 1;
+	        for (int i = 1; i < array.length; i++)
+	        {
+	            int index = array[i]/place % 10;
+	            count[index]++;
+	        }
+	        for (int i = 1; i < 10; i++)
+	        {
+	            count[i] += count[i-1];
+	        }
+	        for (int i = size - 1; i>=0; i--)
+	        {
+	            int index = (array[i] / place) % 10;
+	            result[count[place-1]] = array[i];
+	            count[index]--;
+	        }
+	        for (int i = 0; i < array.length; i++)
+	        {
+	            array[i] = result[i];
+	        }
+	    }
+
+	    private static void radixSort(int array[]) {
+	        int max = array[0];
+	        for (int i = 1; i < array.length; i++)
+	        {
+	            if (array[i] > max)
+	            {
+	                max = array[i];
+	            }
+	        }
+
+	        for (int place = 1; max / place > 0; place *= 10)
+	        {
+	            countingSort(array);
+	        }
+	    }
+
+	    private static void shellSort(int array[]) {
+	        for (int interval = array.length / 2; interval > 0; interval = interval / 2)
+	        {
+	            for (int i = interval; i < array.length; i += 1)
+	            {
+	                int temp = array[i];
+	                int j;
+	                for (j = i; j >= interval && array[j - interval] > temp; j -= interval)
+	                {
+	                    array[j] = array[j - interval];
+	                }
+	                array[j] = temp;
+	            }
+	        }
+	    }
+
+	    private static void heapSort(int arr[]) {
+
+	        for (int i = arr.length / 2 - 1; i >= 0; i--) {
+	            heapify(arr, arr.length, i);
+	        }
+
+	        for (int i = arr.length - 1; i >= 0; i--) {
+	            int temp = arr[0];
+	            arr[0] = arr[i];
+	            arr[i] = temp;
+
+	            heapify(arr, i, 0);
+	        }
+	    }
+
+	    private static void heapify(int arr[], int size, int i) {
+	        int largest = i;
+	        int l = 2 * i + 1;
+	        int r = 2 * i + 2;
+
+	        if (l < size && arr[l] > arr[largest])
+	            largest = l;
+
+	        if (r < size && arr[r] > arr[largest])
+	            largest = r;
+
+	        if (largest != i)
+	        {
+	            int swap = arr[i];
+	            arr[i] = arr[largest];
+	            arr[largest] = swap;
+
+	            heapify(arr, size, largest);
+	        }
+	    }
+
+	    private static void insertionSort(int array[]) {
+	    	
+	        for (int step = 1; step < array.length; step++)
+	        {
+	            int key = array[step];
+	            int j = step - 1;
+
+	            while (j >= 0 && key < array[j])
+	            {
+	                array[j + 1] = array[j];
+	                --j;
+	            }
+
+	            array[j + 1] = key;
+	        }
+	    }
+	    
+	    private static int readInputAlgo(Scanner scanner) {
+	        int result = 0;
+	        boolean input = true;
+	        while (input)
+	        {
+	            System.out.print("Enter number between 1000 and 10000:");
+	            try {
+	                result = scanner.nextInt();
+	                if (result < 1000 || result > 10000)
+	                {
+	                    System.out.println("Entered number should be between 1000 and 10000!");
+	                }
+	                else
+	                {
+	                    input = false;
+	                }
+	            } catch (ArithmeticException e) {
+	                System.out.println("Enter valid number!");}
+	        }
+	        return result;
+	    }
+
+	    private static int readInput(Scanner scanner) {
+	        int result = 0;
+	        boolean valid = true;
+	        while (valid) {
+	            System.out.print("Enter 0 for exiting:");
+	            try {
+	                result = scanner.nextInt();
+	                if (result == 0) {
+	                    valid = false;
+	                } else {
+	                    System.out.println("Enter valid number!");
+	                }
+	            } catch (ArithmeticException e) {
+	                System.out.println("Enter valid number!");
+	                scanner.nextLine();
+	            }
+	        }
+	        return result;
+	    }
+
+	    private static void copyArrays(int array[]) {
+	        for (int i = 0; i < array.length; i++)
+	        {
+	            radixArray[i] = array[i];
+	            shellArray[i] = array[i];
+	            heapArray[i] = array[i];
+	            insertionArray[i] = array[i];
+	        }
+	    }
+	    
+	    private static void calculateDuration() {
+	        startTime = System.nanoTime();
+	        radixSort(radixArray);
+	        endTime = System.nanoTime();
+	        System.out.println("Radix Sort Duration: " + (endTime - startTime) + " ns");
+
+	        startTime = System.nanoTime();
+	        shellSort(shellArray);
+	        endTime = System.nanoTime();
+	        System.out.println("Shell Sort Duration: " + (endTime - startTime) + " ns");
+
+	        startTime = System.nanoTime();
+	        heapSort(heapArray);
+	        endTime = System.nanoTime();
+	        System.out.println("Heap Sort Duration: " + (endTime - startTime) + " ns");
+
+	        startTime = System.nanoTime();
+	        insertionSort(insertionArray);
+	        endTime = System.nanoTime();
+	        System.out.println("Insertion Sort Duration: " + (endTime - startTime) + " ns");
+	    }
+	    
 	    public static void main(String[] args) {
 	    	displayLaptopAsciiArt();
 	    	cmpe343project2group4 instance = new cmpe343project2group4(); 
