@@ -45,7 +45,6 @@ import java.util.Scanner;
 
 	        @Override
 	        public void showMenu() {
-	            // Manager için özel menü fonksiyonunu çağırın
 	            showManagerMenu(username);
 	        }
 	    }
