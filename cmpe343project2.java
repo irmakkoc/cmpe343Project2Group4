@@ -118,41 +118,57 @@ import java.util.Scanner;
 		
 
 
-	    public static void showManagerMenu(String username) {
-	        Scanner scanner = new Scanner(System.in);
-	        while (true) {
-	            System.out.println("\n--- Manager Menu ---");
-	            System.out.println("1. Display All Employees");
-	            System.out.println("2. Update Employee Non-Profile Fields");
-	            System.out.println("3. Hire Employee");
-	            System.out.println("4. Fire Employee");
-	            System.out.println("5. Logout");
-	            System.out.print("Seçiminiz: ");
+	    public static void showManagerMenu(String loggedInUsername) { 
+	    	Scanner scanner = new Scanner(System.in);
+            while (true) {
+                System.out.println("\n--- Manager Menu ---");
+                System.out.println("1. Update Own Profile");
+                System.out.println("2. Display All Employees");
+                System.out.println("3. Display Employees with the Role");
+                System.out.println("4. Display Employee with Username");
+                System.out.println("5. Update Employee Non-Profile Fields");
+                System.out.println("6. Hire Employee");
+                System.out.println("7. Fire Employee");
+                System.out.println("8. Run Algorithms");
+                System.out.println("9. Logout");
+                System.out.print("Seçiminiz: ");
 
-	            int choice = scanner.nextInt();
-	            scanner.nextLine(); 
-
-	            switch (choice) {
-	                case 1:
-	                    displayAllEmployees();
-	                    break;
-	                case 2:
-	                    updateEmployeeNonProfileFields();
-	                    break;
-	                case 3:
-	                    hireEmployee();
-	                    break;
-	                case 4:
-	                    fireEmployee();
-	                    break;
-	                case 5:
-	                    logout();
-	                    return; //return to login 
-	                default:
-	                    System.out.println("Invalid cohice. Try again.");
-	            }
-	        }
-	    }
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+        
+                switch (choice) {
+                    case 1:
+                        updateProfile(loggedInUsername);
+                        break;
+                    case 2:
+                        displayAllEmployees();
+                        break;
+                    case 3:
+                        displayEmployeesWithRole();
+                        break;
+                    case 4:
+                        displayEmployeeWithUsername();
+                        break;
+                    case 5:
+                        updateEmployeeNonProfileFields();
+                        break;
+                    case 6:
+                        hireEmployee();
+                        break;
+                    case 7:
+                    	fireEmployee(loggedInUsername);
+                        break;
+                    case 8:
+                        runAlgorithms();
+                        break;
+                    case 9:
+                        logout();
+                        return; 
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            }
+        }
 
 	    
 	    public static void showRegularMenu(String username) {
@@ -208,6 +224,41 @@ import java.util.Scanner;
 		
 
 	    // Manager menu operations
+	    private static void updateProfile1(String username) {
+	        Scanner scanner = new Scanner(System.in);
+
+	        System.out.println("\nProfil Güncelleme");
+	        System.out.print("Yeni Telefon Numarası: ");
+	        String newPhone = scanner.nextLine();
+
+	        System.out.print("Yeni E-posta: ");
+	        String newEmail = scanner.nextLine();
+
+	        System.out.print("Yeni Şifre: ");
+	        String newPassword = scanner.nextLine();
+
+	        String query = "UPDATE employees SET phone_no = ?, email = ?, password = ? WHERE username = ?";
+
+	        try (Connection conn = connect(); 
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setString(1, newPhone);
+	            stmt.setString(2, newEmail);
+	            stmt.setString(3, newPassword);
+	            stmt.setString(4, username);
+
+	            int rowsAffected = stmt.executeUpdate();
+	            if (rowsAffected > 0) {
+	                System.out.println("Profil başarıyla güncellendi!");
+	            } else {
+	                System.out.println("Profil güncellenemedi. Kullanıcı bulunamadı.");
+	            }
+
+	        } catch (SQLException e) {
+	            System.err.println("Profil güncelleme sırasında hata: " + e.getMessage());
+	        }
+	    }
+	    
 	    private static void displayAllEmployees() {
 	        String query = "SELECT * FROM employees";
 	        try (Connection connection = connect();
@@ -224,6 +275,29 @@ import java.util.Scanner;
 	            }
 	        } catch (SQLException e) {
 	            System.out.println("Hata: " + e.getMessage());
+	        }
+	    }
+
+	    private static void displayEmployeesWithRole() {
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter role to filter by (e.g., manager, engineer): ");
+	        String role = scanner.nextLine();
+
+	        String query = "SELECT * FROM employees WHERE role = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, role);
+	            ResultSet rs = stmt.executeQuery();
+
+	            System.out.println("\n--- Employees with Role: " + role + " ---");
+	            while (rs.next()) {
+	                System.out.println("Name: " + rs.getString("name"));
+	                System.out.println("Username: " + rs.getString("username"));
+	                System.out.println("--------------------");
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
 	        }
 	    }
 
