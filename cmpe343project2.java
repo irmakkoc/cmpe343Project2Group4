@@ -194,12 +194,12 @@ import java.util.Scanner;
 		
 				if (exitChoice.equals("Y")) {
 					System.out.println("Exiting the program. Goodbye!");
-					System.exit(0); // Programı sonlandır
+					System.exit(0); 
 				} else if (exitChoice.equals("N")) {
 					System.out.println("Returning to the login screen...");
 					cmpe343project2group4 instance = new cmpe343project2group4();
-					instance.login(); // Login ekranına dön
-					return; // Döngüyü sonlandır
+					instance.login(); 
+					return; 
 				} else {
 					System.out.println("Invalid choice. Please enter 'Y' or 'N'.");
 				}
@@ -293,7 +293,7 @@ import java.util.Scanner;
 	                case 4:
 	                    return; 
 	                default:
-	                    System.out.println("Geçersiz seçim. Tekrar deneyin.");
+	                    System.out.println("Invalid choice. Try again.");
 	            }
 	           
 	        }
