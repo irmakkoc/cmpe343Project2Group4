@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 	    private static final String URL = "jdbc:mysql://localhost:3306/firm_management"; 
 	    private static final String USER = "root"; 
-	    private static final String PASSWORD = "";
+	    private static final String PASSWORD = "277353MYSQL.";
 	    
 	    private static Connection connect() throws SQLException {
 	        return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -108,7 +108,7 @@ import java.util.Scanner;
 						employee.showMenu(); // This will call the correct menu based on the role
 						return; // Exit the loop after showing the menu
 					} else {
-						System.out.println("Invalid credentials. Try again.");
+						System.out.println("Incorrect username and/or password. Try again.");
 					}
 				} catch (SQLException e) {
 					System.out.println("Database error: " + e.getMessage());
@@ -460,7 +460,7 @@ import java.util.Scanner;
 
 	    // Regular Employee Menu Operations
 	    private static void displayProfile(String username) {
-	        String query = "SELECT password, phone_no, email FROM employees WHERE username = ?";
+	        String query = "SELECT password, phone_no, email, role, date_of_birth FROM employees WHERE username = ?";
 	        try (Connection connection = connect();
 	             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -472,6 +472,8 @@ import java.util.Scanner;
 	                System.out.println("Password: " + resultSet.getString("password"));
 	                System.out.println("Phone Number: " + resultSet.getString("phone_no"));
 	                System.out.println("E-mail: " + resultSet.getString("email"));
+	                System.out.println("Role: " + resultSet.getString("role"));
+	                System.out.println("Date of birth: " + resultSet.getString("date_of_birth"));
 	            } else {
 	                System.out.println("Profil bilgisi bulunamadı.");
 	            }
@@ -575,8 +577,45 @@ import java.util.Scanner;
 	            System.out.println("Error: " + e.getMessage());
 	        }
 	    }
+	    
+	    public static void displayLaptopAsciiArt() {
+	        // ANSI escape codes for colors
+	        String reset = "\u001B[0m";
+	        String white = "\u001B[37m";
+	        String blue = "\u001B[34m";
+	        String green = "\u001B[32m";
+	        String yellow = "\u001B[33m";
+	        String cyan = "\u001B[36m";
+	        String red = "\u001B[31m";
+
+	        System.out.println();
+	        System.out.println(cyan + "█████████████████████████████████████████████████████████████" + reset);
+	        System.out.println(cyan + "██                                                         ██" + reset);
+	        System.out.println(cyan + "██  " + red + "   ██   ██ ███████  ███     ███      █████████       " +cyan + "  ██" + reset);
+	        System.out.println(cyan + "██  " + red + "   ██   ██ ██       ███     ███      ██     ██       " + cyan + "  ██" + reset);
+	        System.out.println(cyan + "██  " + red + "   ███████ ██████   ███     ███      ██     ██       " + cyan + "  ██" + reset);
+	        System.out.println(cyan + "██  " + red + "   ██   ██ ██       ███     ███      ██     ██       " + cyan + "  ██" + reset);
+	        System.out.println(cyan + "██  " + red + "   ██   ██ ███████  ███████ ████████ █████████       " + cyan + "  ██" + reset);
+	        System.out.println(cyan + "██  " + red + "                                                     " + cyan + "  ██" + reset);
+	        System.out.println(cyan + "██                                                         ██" + reset);
+	        System.out.println(cyan + "█████████████████████████████████████████████████████████████" + reset);
+	        System.out.println(cyan + " ██                                                         ██" + reset);
+	        System.out.println(cyan + "  ██      " + yellow + "███████████████████████████████████████" + cyan + "            ██" + reset);
+	        System.out.println(cyan + "   ██      " + yellow + "██                                   ██" + cyan + "            ██" + reset);
+	        System.out.println(cyan + "    ██      " + yellow + "██   Welcome to the Firm Management  ██" + cyan + "            ██" + reset);
+	        System.out.println(cyan + "     ██      " + yellow + "██                                   ██" + cyan + "            ██" + reset);
+	        System.out.println(cyan + "      ██      " + yellow + "███████████████████████████████████████" + cyan + "            ██" + reset);
+	        System.out.println(cyan + "       ██                                                         ██" + reset);
+	        System.out.println(cyan + "        █████████████████████████████████████████████████████████████" + reset);
+	        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
+	        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
+	        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
+	        System.out.println();
+	    }
+
 
 	    public static void main(String[] args) {
+	    	displayLaptopAsciiArt();
 	    	cmpe343project2group4 instance = new cmpe343project2group4(); 
 	        instance.login();
 	    }
