@@ -20,6 +20,21 @@ import java.util.Scanner;
 
 	    public static void login() {
 	        Scanner scanner = new Scanner(System.in);
+		    // Exit option at the start of the program
+	        while (true) {
+	            System.out.print("Do you want to exit? (Y/N): ");
+	            String exitChoice = scanner.nextLine().toUpperCase();
+	            
+	            if (exitChoice.equals("Y")) {
+	            	System.out.println("Exiting the program. Goodbye!");
+	                System.exit(0); // Terminates the program
+	            } else if(exitChoice.equals("N")) {
+	            	break;
+	            } else {
+	                System.out.println("Couldn't understand your choice. Please enter 'Y' for exit or 'N' to continue.");
+	            }
+	        }
+		    
 	        boolean isAuthenticated = false;
 
 	        while (!isAuthenticated) {
