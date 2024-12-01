@@ -301,16 +301,161 @@ import java.util.Scanner;
 	        }
 	    }
 
-	    private static void updateEmployeeNonProfileFields() {
-	        System.out.println("Çalışan bilgileri güncelleniyor...");
+	    private static void displayEmployeeWithUsername() {
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter username: ");
+	        String username = scanner.nextLine();
+
+	        String query = "SELECT * FROM employees WHERE username = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, username);
+	            ResultSet rs = stmt.executeQuery();
+
+	            if (rs.next()) {
+	                System.out.println("\n--- Employee Details ---");
+	                System.out.println("Name: " + rs.getString("name"));
+	                System.out.println("Surname: " + rs.getString("surname"));
+	                System.out.println("Role: " + rs.getString("role"));
+	                System.out.println("Phone: " + rs.getString("phone_no"));
+	                System.out.println("Email: " + rs.getString("email"));
+	            } else {
+	                System.out.println("Employee not found.");
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
 	    }
+        
+	    
+	    
+	    private static void updateEmployeeNonProfileFields() {
+	        Scanner scanner = new Scanner(System.in);
+
+	        System.out.print("Enter the username of the employee to update: ");
+	        String username = scanner.nextLine();
+
+	        String checkQuery = "SELECT * FROM employees WHERE username = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+
+	            checkStmt.setString(1, username);
+	            ResultSet rs = checkStmt.executeQuery();
+
+	            if (!rs.next()) {
+	                System.out.println("No employee found with the given username.");
+	                return;
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error while checking user existence: " + e.getMessage());
+	            return;
+	        }
+
+	        System.out.println("\nWhich field do you want to update?");
+	        System.out.println("[1] Name");
+	        System.out.println("[2] Surname");
+	        System.out.println("[3] Role");
+	        System.out.print("Your choice: ");
+	        int choice = scanner.nextInt();
+	        scanner.nextLine(); 
+
+	        String query = null;
+	        String newValue = null;
+
+	        switch (choice) {
+	            case 1:
+	                System.out.print("Enter new Name: ");
+	                newValue = scanner.nextLine();
+	                query = "UPDATE employees SET name = ? WHERE username = ?";
+	                break;
+	            case 2:
+	                System.out.print("Enter new Surname: ");
+	                newValue = scanner.nextLine();
+	                query = "UPDATE employees SET surname = ? WHERE username = ?";
+	                break;
+	            case 3:
+	                System.out.print("Enter new Role: ");
+	                newValue = scanner.nextLine();
+	                query = "UPDATE employees SET role = ? WHERE username = ?";
+	                break;
+	            default:
+	                System.out.println("Invalid choice. No changes made.");
+	                return;
+	        }
+
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, newValue);
+	            stmt.setString(2, username);
+
+	            int rowsAffected = stmt.executeUpdate();
+	            if (rowsAffected > 0) {
+	                System.out.println("Field updated successfully!");
+	            } else {
+	                System.out.println("No employee found with the given username.");
+	            }
+
+	        } catch (SQLException e) {
+	            System.out.println("Error while updating employee: " + e.getMessage());
+	        }
+	    }
+
+
 
 	    private static void hireEmployee() {
-	        System.out.println("Yeni çalışan ekleniyor...");
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter name: ");
+	        String name = scanner.nextLine();
+	        System.out.print("Enter surname: ");
+	        String surname = scanner.nextLine();
+	        System.out.print("Enter username: ");
+	        String username = scanner.nextLine();
+	        System.out.print("Enter role: ");
+	        String role = scanner.nextLine();
+
+	        String query = "INSERT INTO employees (name, surname, username, role, password) VALUES (?, ?, ?, ?, 'default123')";
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, name);
+	            stmt.setString(2, surname);
+	            stmt.setString(3, username);
+	            stmt.setString(4, role);
+	            stmt.executeUpdate();
+
+	            System.out.println("New employee hired successfully.");
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
 	    }
 
-	    private static void fireEmployee() {
-	        System.out.println("Çalışan çıkarılıyor...");
+	    private static void fireEmployee(String loggedInUsername) {
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter employee username to fire: ");
+	        String username = scanner.nextLine();
+
+	        
+	        if (loggedInUsername.equals(username)) {
+	            System.out.println("You cannot fire yourself!");
+	            return;
+	        }
+
+	        String query = "DELETE FROM employees WHERE username = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+	            stmt.setString(1, username);
+	            int rowsAffected = stmt.executeUpdate();
+
+	            if (rowsAffected > 0) {
+	                System.out.println("Employee fired successfully.");
+	            } else {
+	                System.out.println("No employee found with the given username.");
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
 	    }
 
 	    // Regular Employee Menu Operations
