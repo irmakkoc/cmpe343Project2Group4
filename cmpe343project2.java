@@ -579,7 +579,7 @@ import java.util.Scanner;
 	    }
 	    
 	    public static void displayLaptopAsciiArt() {
-	        // ANSI escape codes for colors
+	       
 	        String reset = "\u001B[0m";
 	        String white = "\u001B[37m";
 	        String blue = "\u001B[34m";
