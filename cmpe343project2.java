@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 	    private static final String URL = "jdbc:mysql://localhost:3306/firm_management"; 
 	    private static final String USER = "root"; 
-	    private static final String PASSWORD = "";
+	    private static final String PASSWORD = "277353MYSQL.";
 	    
 	    private static Connection connect() throws SQLException {
 	        return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -500,10 +500,22 @@ import java.util.Scanner;
 	                    updateField(username, "password", newPassword);
 	                    break;
 	                case 2:
-	                    System.out.print("Enter Your New Phone Number: ");
-	                    String newPhoneNo = scanner.nextLine();
-	                    updateField(username, "phone_no", newPhoneNo);
+	                    try {
+	                        System.out.print("Telefon numaranızı girin: ");
+	                        String phoneNumber = scanner.nextLine();
+
+	                        if (phoneNumber.matches(".*[a-zA-Z]+.*")) {
+	                            throw new IllegalArgumentException("Telefon numarası harf içeremez.");
+	                        }
+
+	                        updateField(username, "phone_no", phoneNumber);
+	                    } catch (IllegalArgumentException e) {
+	                        System.out.println(e.getMessage());
+	                    } catch (Exception e) {
+	                        System.out.println("Bir hata oluştu: " + e.getMessage());
+	                    }
 	                    break;
+
 	                case 3:
 	                    System.out.print("Enter Your new E-mail: ");
 	                    String newEmail = scanner.nextLine();
