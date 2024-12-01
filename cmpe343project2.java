@@ -79,40 +79,56 @@ import java.util.Scanner;
 
 
 	    public static void showManagerMenu(String username) {
-	        Scanner scanner = new Scanner(System.in);
-	        while (true) {
-	            System.out.println("\n--- Manager Menu ---");
-	            System.out.println("1. Display All Employees");
-	            System.out.println("2. Update Employee Non-Profile Fields");
-	            System.out.println("3. Hire Employee");
-	            System.out.println("4. Fire Employee");
-	            System.out.println("5. Logout");
-	            System.out.print("Seçiminiz: ");
-
-	            int choice = scanner.nextInt();
-	            scanner.nextLine(); 
-
-	            switch (choice) {
-	                case 1:
-	                    displayAllEmployees();
-	                    break;
-	                case 2:
-	                    updateEmployeeNonProfileFields();
-	                    break;
-	                case 3:
-	                    hireEmployee();
-	                    break;
-	                case 4:
-	                    fireEmployee();
-	                    break;
-	                case 5:
-	                    logout();
-	                    return; //return to login 
-	                default:
-	                    System.out.println("Invalid cohice. Try again.");
-	            }
-	        }
-	    }
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                System.out.println("\n--- Manager Menu ---");
+                System.out.println("1. Update Own Profile");
+                System.out.println("2. Display All Employees");
+                System.out.println("3. Display Employees with the Role");
+                System.out.println("4. Display Employee with Username");
+                System.out.println("5. Update Employee Non-Profile Fields");
+                System.out.println("6. Hire Employee");
+                System.out.println("7. Fire Employee");
+                System.out.println("8. Run Algorithms");
+                System.out.println("9. Logout");
+                System.out.print("Seçiminiz: ");
+        
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Enter temizle
+        
+                switch (choice) {
+                    case 1:
+                        updateProfile(username);
+                        break;
+                    case 2:
+                        displayAllEmployees();
+                        break;
+                    case 3:
+                        displayEmployeesWithRole();
+                        break;
+                    case 4:
+                        displayEmployeeWithUsername();
+                        break;
+                    case 5:
+                        updateEmployeeNonProfileFields();
+                        break;
+                    case 6:
+                        hireEmployee();
+                        break;
+                    case 7:
+                        fireEmployee();
+                        break;
+                    //case 8:
+                        //runAlgorithms();
+                        //break;
+                    case 9:
+                        logout();
+                        return; // Return to login
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            }
+        }
 
 	    
 	    public static void showRegularMenu(String username) {
