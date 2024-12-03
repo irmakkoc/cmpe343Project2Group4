@@ -502,8 +502,34 @@ public class cmpe343project2group4 {
 	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
 	            }
 	        }
+	        
+	        String date_of_start = null;
+	        while (true) {
+	            System.out.print("Enter date of start (YYYY-MM-DD): ");
+	            date_of_start = scanner.nextLine();
+	            if (isValidDate(date_of_start)) {
+	                break;
+	            } else {
+	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	            }
+	        }
+	        
+	        System.out.print("Enter email: ");
+	        String email = scanner.nextLine();
+	        
+	        String phone_no = null;
+	        while (true) {
+	            System.out.print("Enter phone number: ");
+	            phone_no = scanner.nextLine();
+	            if (phone_no.matches("\\d+")) { 
+	                break;
+	            } else {
+	                System.out.println("Invalid phone number. Please enter digits only.");
+	            }
+	        }
 
-	        String query = "INSERT INTO employees (name, surname, username, role, date_of_birth, password) VALUES (?, ?, ?, ?, ?, 'default123')";
+	        String query = "INSERT INTO employees (name, surname, username, role, date_of_birth, date_of_start, email, phone_no, password, first_login) "
+	        		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'default123', 1)";
 
 	        try (Connection connection = connect();
 	             PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -513,6 +539,9 @@ public class cmpe343project2group4 {
 	            stmt.setString(3, username);
 	            stmt.setString(4, role);
 	            stmt.setString(5, date_of_birth);
+	            stmt.setString(6, date_of_start);
+	            stmt.setString(7, email);
+	            stmt.setString(8, phone_no);
 
 	            int rowsAffected = stmt.executeUpdate();
 	            if (rowsAffected > 0) {
