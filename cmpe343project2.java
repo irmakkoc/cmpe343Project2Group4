@@ -284,10 +284,18 @@ public class cmpe343project2group4 {
         }
     }
 
-    private static void displayEmployeesWithRole() {
+   	private static void displayEmployeesWithRole() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter role to filter by (e.g., manager, engineer): ");
+        System.out.print("Enter role to filter by (manager, engineer, intern or technician): ");
         String role = scanner.nextLine().toLowerCase();
+        
+        if (!role.equals("manager") && 
+                !role.equals("engineer") && 
+                !role.equals("intern") && 
+                !role.equals("technician")) {
+                System.out.println("There is no such role.");
+                return;
+            }
 
         String query = "SELECT * FROM employees WHERE role = ?";
         try (Connection connection = connect();
