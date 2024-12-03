@@ -571,8 +571,15 @@ public class cmpe343project2group4 {
             System.out.println("Enter 3 to Update E-mail");
             System.out.println("Enter 4 to Go Back to Main Menu");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = -1;
+
+            try {
+                System.out.print("Your choice: ");
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Choice invalid! Please enter a number between 1 and 4.");
+                continue; 
+            }
 
             switch (choice) {
                 case 1:
