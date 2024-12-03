@@ -334,6 +334,8 @@ public class cmpe343project2group4 {
                 System.out.println("Role: " + rs.getString("role"));
                 System.out.println("Phone: " + rs.getString("phone_no"));
                 System.out.println("Email: " + rs.getString("email"));
+		System.out.println("Date of Birth: " + rs.getString("date_of_birth"));
+                System.out.println("Date of Start: " + rs.getString("date_of_start"));
             } else {
                 System.out.println("Employee not found.");
             }
