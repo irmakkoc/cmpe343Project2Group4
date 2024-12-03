@@ -137,7 +137,7 @@ public class cmpe343project2group4 {
             System.out.println("7. Fire Employee");
             System.out.println("8. Run Algorithms");
             System.out.println("9. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your Choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -184,7 +184,7 @@ public class cmpe343project2group4 {
             System.out.println("1. Display Profile");
             System.out.println("2. Update Profile");
             System.out.println("3. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your Choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
