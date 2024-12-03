@@ -757,7 +757,7 @@ public class cmpe343project2group4 {
             calculateDuration(radixArray, shellArray, heapArray, insertionArray, arrayList, ascendingComparator);
             exeEndTime = System.nanoTime();
             System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
-            valid = readInput(scanner);
+            logout();
         } while(valid !=0 );
         scanner.close();
 
