@@ -720,7 +720,6 @@ public class cmpe343project2group4 {
             System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
             valid = readInput(scanner);
         } while(valid !=0 );
-        scanner.close();
 
     }
     public static int[] generateRandomArray(int size) // size 1000-10000 arasinda olacak.
@@ -736,24 +735,28 @@ public class cmpe343project2group4 {
 
     private static void countingSort(int[] array, int place) {
         int[] result = new int[array.length];
-        int[] count = new int[20]; // -10 to +9 için yer ayırır (negatif değerler dahil)
-        
+        int[] count = new int[20];
+
         for (int i = 0; i < array.length; i++) {
-            int index = (array[i] / place % 10) + 10; // Negatif değerleri pozitif yapmak için +10
+            int index = (array[i] / place % 10) + 9;
             count[index]++;
         }
+
         for (int i = 1; i < 20; i++) {
             count[i] += count[i - 1];
         }
+
         for (int i = array.length - 1; i >= 0; i--) {
-            int index = (array[i] / place % 10) + 10; // Negatif değerleri pozitif yapmak için +10
+            int index = (array[i] / place % 10) + 9;
             result[count[index] - 1] = array[i];
             count[index]--;
         }
+
         for (int i = 0; i < array.length; i++) {
             array[i] = result[i];
         }
     }
+
 
     private static void radixSort(int array[]) {
         int max = array[0];
@@ -875,19 +878,22 @@ public class cmpe343project2group4 {
 
     private static int readInput(Scanner scanner) {
         int result = 0;
-        boolean valid = true;
-        while (valid) {
-            System.out.print("Enter 0 for exiting:");
+        while (true) {
+            System.out.print("Enter 0 for exiting or 1 for continue:");
             try {
                 result = scanner.nextInt();
                 if (result == 0) {
-                    valid = false;
-                } else {
+                    break;
+                }
+                else if (result == 1)
+                {
+                    break;
+                }
+                else {
                     System.out.println("Enter valid number!");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Enter valid number!");
-                scanner.nextLine();
             }
         }
         return result;
