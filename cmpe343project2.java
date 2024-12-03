@@ -8,6 +8,10 @@ import java.sql.Statement;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Collections;
+import java.util.*;
 
 
 public class cmpe343project2group4 {
@@ -615,29 +619,30 @@ public class cmpe343project2group4 {
         System.out.println();
     }
 
-
+    private static int[] radixArray, shellArray, heapArray, insertionArray;
     public static void runAlgorithms() {
         Comparator<Integer> ascendingComparator = getAscendingComparator();
-        private static int[] radixArray, shellArray, heapArray, insertionArray;
+        int valid;
         long exeStartTime, exeEndTime;
+        Scanner scanner = new Scanner(System.in);
         do {
-            int valid = 1; //for exiting this should turn 0
-            Scanner scanner = new Scanner(System.in);
+            valid = 1; //for exiting this should turn 0
             int size = readInputAlgo(scanner);
             exeStartTime = System.nanoTime();
 
             int[] randomArray = generateRandomArray(size);
-            int[] radixArray = new int[size];
-            int[] shellArray = new int[size];
-            int[] heapArray = new int[size];
-            int[] insertionArray = new int[size];
-            copyArrays(randomArray, radixArray, shellArray, heapArray, insertionArray);
+            radixArray = new int[size];
+            shellArray = new int[size];
+            heapArray = new int[size];
+            insertionArray = new int[size];
+            copyArrays(randomArray);
             List<Integer> arrayList = arrToList(randomArray);
             calculateDuration(radixArray, shellArray, heapArray, insertionArray, arrayList, ascendingComparator);
             exeEndTime = System.nanoTime();
             System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
             valid = readInput(scanner);
-        } while(valid !=0 )
+        } while(valid !=0 );
+        scanner.close();
 
     }
     public static int[] generateRandomArray(int size) // size 1000-10000 arasinda olacak.
@@ -666,7 +671,7 @@ public class cmpe343project2group4 {
         for (int i = array.length - 1; i>=0; i--)
         {
             int index = (array[i] / place) % 10;
-            result[count[place-1]] = array[i];
+            result[count[index]-1]] = array[i];
             count[index]--;
         }
         for (int i = 0; i < array.length; i++)
@@ -766,7 +771,7 @@ public class cmpe343project2group4 {
             public int compare(Integer o1, Integer o2) {
                 return o1 - o2;
             }
-        }
+        };
     };
 
     private static int readInputAlgo(Scanner scanner) {
