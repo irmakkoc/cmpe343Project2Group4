@@ -728,24 +728,21 @@ public class cmpe343project2group4 {
 
     private static void countingSort(int[] array, int place) {
         int[] result = new int[array.length];
-        int[] count = new int [10];
-        for (int i = 1; i < array.length; i++)
-        {
-            int index = array[i]/place % 10;
+        int[] count = new int[20]; // -10 to +9 için yer ayırır (negatif değerler dahil)
+        
+        for (int i = 0; i < array.length; i++) {
+            int index = (array[i] / place % 10) + 10; // Negatif değerleri pozitif yapmak için +10
             count[index]++;
         }
-        for (int i = 1; i < 10; i++)
-        {
-            count[i] += count[i-1];
+        for (int i = 1; i < 20; i++) {
+            count[i] += count[i - 1];
         }
-        for (int i = array.length - 1; i>=0; i--)
-        {
-            int index = (array[i] / place) % 10;
-            result[count[index]-1] = array[i];
+        for (int i = array.length - 1; i >= 0; i--) {
+            int index = (array[i] / place % 10) + 10; // Negatif değerleri pozitif yapmak için +10
+            result[count[index] - 1] = array[i];
             count[index]--;
         }
-        for (int i = 0; i < array.length; i++)
-        {
+        for (int i = 0; i < array.length; i++) {
             array[i] = result[i];
         }
     }
