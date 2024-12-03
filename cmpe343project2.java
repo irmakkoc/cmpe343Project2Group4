@@ -234,13 +234,13 @@ public class cmpe343project2group4 {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\nProfil Güncelleme");
-        System.out.print("Yeni Telefon Numarası: ");
+        System.out.print("New Phone Number: ");
         String newPhone = scanner.nextLine();
 
-        System.out.print("Yeni E-posta: ");
+        System.out.print("New Email: ");
         String newEmail = scanner.nextLine();
 
-        System.out.print("Yeni Şifre: ");
+        System.out.print("New Password: ");
         String newPassword = scanner.nextLine();
 
         String query = "UPDATE employees SET phone_no = ?, email = ?, password = ? WHERE username = ?";
@@ -255,13 +255,13 @@ public class cmpe343project2group4 {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Profil başarıyla güncellendi!");
+                System.out.println("Profile updated successfully!");
             } else {
-                System.out.println("Profil güncellenemedi. Kullanıcı bulunamadı.");
+                System.out.println("Profile update failed. User not found.");
             }
 
         } catch (SQLException e) {
-            System.err.println("Profil güncelleme sırasında hata: " + e.getMessage());
+            System.err.println("Error during profile update: " + e.getMessage());
         }
     }
 
