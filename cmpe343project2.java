@@ -417,7 +417,7 @@ public class cmpe343project2group4 {
 	                        System.out.print("Enter new Date of Birth (YYYY-MM-DD): ");
 	                        newValue = scanner.nextLine();
 	                        if (isValidDate(newValue)) {
-	                            fieldName = "dateofbirth";
+	                            fieldName = "date_of_birth";
 	                            break;
 	                        } else {
 	                            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
