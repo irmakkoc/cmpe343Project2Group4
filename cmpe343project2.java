@@ -19,7 +19,7 @@ public class cmpe343project2group4 {
 
     private static final String URL = "jdbc:mysql://localhost:3306/firm_management";
     private static final String USER = "root";
-    private static final String PASSWORD = "277353MYSQL.";
+    private static final String PASSWORD = "";
 
     private static Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
