@@ -63,7 +63,7 @@ public class cmpe343project2group4 {
 
         @Override
         public void showMenu() {
-            // Regular Employee için özel menü fonksiyonunu çağırın
+
             showRegularMenu(username);
         }
     }
@@ -103,7 +103,7 @@ public class cmpe343project2group4 {
                         updatePasswordOnFirstLogin(username);
                     }
 
-                    // Create the correct employee instance based on role
+
                     Employee employee;
                     if ("manager".equals(role)) {
                         employee = new Manager(employee_id, name, surname, username);
@@ -111,8 +111,8 @@ public class cmpe343project2group4 {
                         employee = new RegularEmployee(employee_id, name, surname, username);
                     }
 
-                    employee.showMenu(); // This will call the correct menu based on the role
-                    return; // Exit the loop after showing the menu
+                    employee.showMenu();
+                    return;
                 } else {
                     System.out.println("Incorrect username and/or password. Try again.");
                 }
@@ -137,7 +137,7 @@ public class cmpe343project2group4 {
             System.out.println("7. Fire Employee");
             System.out.println("8. Run Algorithms");
             System.out.println("9. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your Choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -184,23 +184,28 @@ public class cmpe343project2group4 {
             System.out.println("1. Display Profile");
             System.out.println("2. Update Profile");
             System.out.println("3. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    displayProfile(username);
-                    break;
-                case 2:
-                    updateProfile(username);
-                    break;
-                case 3:
-                    logout();
-                    return; // return to login
-                default:
-                    System.out.println("Geçersiz seçim. Tekrar deneyin.");
+                switch (choice) {
+                    case 1:
+                        displayProfile(username);
+                        break;
+                    case 2:
+                        updateProfile(username);
+                        break;
+                    case 3:
+                        logout();
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
             }
         }
     }
@@ -229,18 +234,18 @@ public class cmpe343project2group4 {
     }
 
 
-    // Manager menu operations
+
     private static void updateProfile1(String username) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nProfil Güncelleme");
-        System.out.print("Yeni Telefon Numarası: ");
+        System.out.println("\nUpdate Profile");
+        System.out.print("New Phone Number: ");
         String newPhone = scanner.nextLine();
 
-        System.out.print("Yeni E-posta: ");
+        System.out.print("New Email: ");
         String newEmail = scanner.nextLine();
 
-        System.out.print("Yeni Şifre: ");
+        System.out.print("New Password: ");
         String newPassword = scanner.nextLine();
 
         String query = "UPDATE employees SET phone_no = ?, email = ?, password = ? WHERE username = ?";
@@ -255,13 +260,13 @@ public class cmpe343project2group4 {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Profil başarıyla güncellendi!");
+                System.out.println("Profile was updated successfully!");
             } else {
-                System.out.println("Profil güncellenemedi. Kullanıcı bulunamadı.");
+                System.out.println("Profile couldn't be updated. Cannot find user.");
             }
 
         } catch (SQLException e) {
-            System.err.println("Profil güncelleme sırasında hata: " + e.getMessage());
+            System.err.println("Error while updating profile: " + e.getMessage());
         }
     }
 
@@ -271,23 +276,34 @@ public class cmpe343project2group4 {
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            System.out.println("\n--- Tüm Çalışanlar ---");
+            System.out.println("\n--- All Employees ---");
             while (resultSet.next()) {
                 System.out.println("ID: " + resultSet.getInt("employee_id"));
                 System.out.println("Name: " + resultSet.getString("name"));
                 System.out.println("Surname: " + resultSet.getString("surname"));
                 System.out.println("Role: " + resultSet.getString("role"));
+                System.out.println("Phone No: " + resultSet.getString("phone_no"));
+                System.out.println("Date of Birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Date of Start: " + resultSet.getString("date_of_start"));
                 System.out.println("--------------------");
             }
         } catch (SQLException e) {
-            System.out.println("Hata: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private static void displayEmployeesWithRole() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter role to filter by (e.g., manager, engineer): ");
-        String role = scanner.nextLine();
+        System.out.print("Enter role to filter by (manager, engineer, intern or technician): ");
+        String role = scanner.nextLine().toLowerCase();
+
+        if (!role.equals("manager") &&
+                !role.equals("engineer") &&
+                !role.equals("intern") &&
+                !role.equals("technician")) {
+            System.out.println("There is no such role.");
+            return;
+        }
 
         String query = "SELECT * FROM employees WHERE role = ?";
         try (Connection connection = connect();
@@ -326,6 +342,8 @@ public class cmpe343project2group4 {
                 System.out.println("Role: " + rs.getString("role"));
                 System.out.println("Phone: " + rs.getString("phone_no"));
                 System.out.println("Email: " + rs.getString("email"));
+                System.out.println("Date of Birth: " + rs.getString("date_of_birth"));
+                System.out.println("Date of Start: " + rs.getString("date_of_start"));
             } else {
                 System.out.println("Employee not found.");
             }
@@ -339,89 +357,180 @@ public class cmpe343project2group4 {
     private static void updateEmployeeNonProfileFields() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter the username of the employee to update: ");
-        String username = scanner.nextLine();
+        String targetUsername = null;
+        while (true) {
+            System.out.print("Enter the username of the employee to update: ");
+            targetUsername = scanner.nextLine();
 
-        String checkQuery = "SELECT * FROM employees WHERE username = ?";
-        try (Connection connection = connect();
-             PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+            String checkQuery = "SELECT * FROM employees WHERE username = ?";
+            try (Connection connection = connect();
+                 PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
 
-            checkStmt.setString(1, username);
-            ResultSet rs = checkStmt.executeQuery();
+                checkStmt.setString(1, targetUsername);
+                ResultSet rs = checkStmt.executeQuery();
 
-            if (!rs.next()) {
-                System.out.println("No employee found with the given username.");
+                if (rs.next()) {
+                    System.out.println("Employee found: " + rs.getString("name") + " " + rs.getString("surname"));
+                    break;
+                } else {
+                    System.out.println("No employee found with the given username. Please try again.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error while checking user existence: " + e.getMessage());
                 return;
             }
-        } catch (SQLException e) {
-            System.out.println("Error while checking user existence: " + e.getMessage());
-            return;
         }
 
-        System.out.println("\nWhich field do you want to update?");
-        System.out.println("[1] Name");
-        System.out.println("[2] Surname");
-        System.out.println("[3] Role");
-        System.out.print("Your choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        boolean continueUpdate = true;
+        while (continueUpdate) {
+            System.out.println("\n--- Update Employee Non-Profile Fields ---");
+            System.out.println("Enter 1 to Update Name");
+            System.out.println("Enter 2 to Update Surname");
+            System.out.println("Enter 3 to Update Role");
+            System.out.println("Enter 4 to Update Date of Birth (YYYY-MM-DD)");
+            System.out.println("Enter 5 to Go Back to Main Menu");
 
-        String query = null;
-        String newValue = null;
+            System.out.print("Your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        switch (choice) {
-            case 1:
-                System.out.print("Enter new Name: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET name = ? WHERE username = ?";
-                break;
-            case 2:
-                System.out.print("Enter new Surname: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET surname = ? WHERE username = ?";
-                break;
-            case 3:
-                System.out.print("Enter new Role: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET role = ? WHERE username = ?";
-                break;
-            default:
-                System.out.println("Invalid choice. No changes made.");
-                return;
-        }
+            String fieldName = null;
+            String newValue = null;
 
-        try (Connection connection = connect();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            stmt.setString(1, newValue);
-            stmt.setString(2, username);
-
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Field updated successfully!");
-            } else {
-                System.out.println("No employee found with the given username.");
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter new Name: ");
+                    newValue = scanner.nextLine();
+                    fieldName = "name";
+                    break;
+                case 2:
+                    System.out.print("Enter new Surname: ");
+                    newValue = scanner.nextLine();
+                    fieldName = "surname";
+                    break;
+                case 3:
+                    while (true) {
+                        System.out.print("Enter new Role (manager, engineer, technician, intern): ");
+                        newValue = scanner.nextLine().toLowerCase();
+                        if (newValue.equals("manager") || newValue.equals("engineer") || newValue.equals("technician") || newValue.equals("intern")) {
+                            fieldName = "role";
+                            break;
+                        } else {
+                            System.out.println("Invalid role. Please enter one of the following: manager, engineer, technician, intern.");
+                        }
+                    }
+                    break;
+                case 4:
+                    while (true) {
+                        System.out.print("Enter new Date of Birth (YYYY-MM-DD): ");
+                        newValue = scanner.nextLine();
+                        if (isValidDate(newValue)) {
+                            fieldName = "date_of_birth";
+                            break;
+                        } else {
+                            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                        }
+                    }
+                    break;
+                case 5:
+                    System.out.println("Returning to the previous menu...");
+                    continueUpdate = false;
+                    continue;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+                    continue;
             }
 
-        } catch (SQLException e) {
-            System.out.println("Error while updating employee: " + e.getMessage());
+            if (fieldName != null && newValue != null) {
+                String updateQuery = "UPDATE employees SET " + fieldName + " = ? WHERE username = ?";
+                try (Connection connection = connect();
+                     PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
+
+                    updateStmt.setString(1, newValue);
+                    updateStmt.setString(2, targetUsername);
+
+                    int rowsAffected = updateStmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println(fieldName + " updated successfully for " + targetUsername + "!");
+                    } else {
+                        System.out.println("Failed to update the field.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error while updating " + fieldName + ": " + e.getMessage());
+                }
+            }
         }
+    }
+
+
+
+
+    private static boolean isValidDate(String date) {
+        return date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
 
 
     private static void hireEmployee() {
         Scanner scanner = new Scanner(System.in);
+
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
         System.out.print("Enter surname: ");
         String surname = scanner.nextLine();
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter role: ");
-        String role = scanner.nextLine();
 
-        String query = "INSERT INTO employees (name, surname, username, role, password) VALUES (?, ?, ?, ?, 'default123')";
+        String role = null;
+        while (true) {
+            System.out.print("Enter role (manager, engineer, technician, intern): ");
+            role = scanner.nextLine().toLowerCase();
+            if (role.equals("manager") || role.equals("engineer") || role.equals("technician") || role.equals("intern")) {
+                break;
+            } else {
+                System.out.println("Invalid role. Please enter one of the following: manager, engineer, technician, intern.");
+            }
+        }
+
+        String date_of_birth = null;
+        while (true) {
+            System.out.print("Enter date of birth (YYYY-MM-DD): ");
+            date_of_birth = scanner.nextLine();
+            if (isValidDate(date_of_birth)) {
+                break;
+            } else {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        String date_of_start = null;
+        while (true) {
+            System.out.print("Enter date of start (YYYY-MM-DD): ");
+            date_of_start = scanner.nextLine();
+            if (isValidDate(date_of_start)) {
+                break;
+            } else {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+
+        String phone_no = null;
+        while (true) {
+            System.out.print("Enter phone number: ");
+            phone_no = scanner.nextLine();
+            if (phone_no.matches("\\d+")) {
+                break;
+            } else {
+                System.out.println("Invalid phone number. Please enter digits only.");
+            }
+        }
+
+        String query = "INSERT INTO employees (name, surname, username, role, date_of_birth, date_of_start, email, phone_no, password, first_login) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'default123', 1)";
+
         try (Connection connection = connect();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -429,9 +538,17 @@ public class cmpe343project2group4 {
             stmt.setString(2, surname);
             stmt.setString(3, username);
             stmt.setString(4, role);
-            stmt.executeUpdate();
+            stmt.setString(5, date_of_birth);
+            stmt.setString(6, date_of_start);
+            stmt.setString(7, email);
+            stmt.setString(8, phone_no);
 
-            System.out.println("New employee hired successfully.");
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("New employee hired successfully.");
+            } else {
+                System.out.println("Failed to hire employee.");
+            }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -464,7 +581,7 @@ public class cmpe343project2group4 {
         }
     }
 
-    // Regular Employee Menu Operations
+
     private static void displayProfile(String username) {
         String query = "SELECT password, phone_no, email, role, date_of_birth FROM employees WHERE username = ?";
         try (Connection connection = connect();
@@ -509,18 +626,18 @@ public class cmpe343project2group4 {
                     break;
                 case 2:
                     try {
-                        System.out.print("Telefon numaranızı girin: ");
+                        System.out.print("Enter your phone number: ");
                         String phoneNumber = scanner.nextLine();
 
                         if (phoneNumber.matches(".*[a-zA-Z]+.*")) {
-                            throw new IllegalArgumentException("Telefon numarası harf içeremez.");
+                            throw new IllegalArgumentException("Phone number cannot contain letters.");
                         }
 
                         updateField(username, "phone_no", phoneNumber);
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     } catch (Exception e) {
-                        System.out.println("Bir hata oluştu: " + e.getMessage());
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
 
@@ -642,7 +759,6 @@ public class cmpe343project2group4 {
             System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
             valid = readInput(scanner);
         } while(valid !=0 );
-        scanner.close();
 
     }
     public static int[] generateRandomArray(int size) // size 1000-10000 arasinda olacak.
@@ -658,27 +774,28 @@ public class cmpe343project2group4 {
 
     private static void countingSort(int[] array, int place) {
         int[] result = new int[array.length];
-        int[] count = new int [10];
-        for (int i = 1; i < array.length; i++)
-        {
-            int index = array[i]/place % 10;
+        int[] count = new int[20];
+
+        for (int i = 0; i < array.length; i++) {
+            int index = (array[i] / place % 10) + 9;
             count[index]++;
         }
-        for (int i = 1; i < 10; i++)
-        {
-            count[i] += count[i-1];
+
+        for (int i = 1; i < 20; i++) {
+            count[i] += count[i - 1];
         }
-        for (int i = array.length - 1; i>=0; i--)
-        {
-            int index = (array[i] / place) % 10;
-            result[count[index]-1]] = array[i];
+
+        for (int i = array.length - 1; i >= 0; i--) {
+            int index = (array[i] / place % 10) + 9;
+            result[count[index] - 1] = array[i];
             count[index]--;
         }
-        for (int i = 0; i < array.length; i++)
-        {
+
+        for (int i = 0; i < array.length; i++) {
             array[i] = result[i];
         }
     }
+
 
     private static void radixSort(int array[]) {
         int max = array[0];
@@ -800,19 +917,22 @@ public class cmpe343project2group4 {
 
     private static int readInput(Scanner scanner) {
         int result = 0;
-        boolean valid = true;
-        while (valid) {
-            System.out.print("Enter 0 for exiting:");
+        while (true) {
+            System.out.print("Enter 0 for exiting or 1 for continue:");
             try {
                 result = scanner.nextInt();
                 if (result == 0) {
-                    valid = false;
-                } else {
+                    break;
+                }
+                else if (result == 1)
+                {
+                    break;
+                }
+                else {
                     System.out.println("Enter valid number!");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Enter valid number!");
-                scanner.nextLine();
             }
         }
         return result;
