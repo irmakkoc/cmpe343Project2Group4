@@ -388,13 +388,33 @@ public class cmpe343project2group4 {
 
 	            switch (choice) {
 	                case 1:
-	                    System.out.print("Enter new Name: ");
-	                    newValue = scanner.nextLine();
+	                    while (true) {
+	        	            try {
+	        	                System.out.print("Enter New Name: ");
+	        	                newValue = scanner.nextLine();
+	        	                if (!newValue.matches("[a-zA-ZğüşıöçĞÜŞİÖÇ]+")) { 
+	        	                    throw new IllegalArgumentException("Name must contain only letters.");
+	        	                }
+	        	                break;
+	        	            } catch (IllegalArgumentException e) {
+	        	                System.out.println(e.getMessage());
+	        	            }
+	        	        }
 	                    fieldName = "name";
 	                    break;
 	                case 2:
-	                    System.out.print("Enter new Surname: ");
-	                    newValue = scanner.nextLine();
+	                	while (true) {
+        	            try {
+        	                System.out.print("Enter New Surname: ");
+        	                newValue = scanner.nextLine();
+        	                if (!newValue.matches("[a-zA-ZğüşıöçĞÜŞİÖÇ]+")) { 
+        	                    throw new IllegalArgumentException("Surname must contain only letters.");
+        	                }
+        	                break;
+        	            } catch (IllegalArgumentException e) {
+        	                System.out.println(e.getMessage());
+        	            }
+        	        }
 	                    fieldName = "surname";
 	                    break;
 	                case 3:
