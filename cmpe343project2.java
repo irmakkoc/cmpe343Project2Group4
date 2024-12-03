@@ -1,4 +1,5 @@
 package cmpe343project2group4;
+import java.io.Console;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,7 +19,7 @@ public class cmpe343project2group4 {
 
     private static final String URL = "jdbc:mysql://localhost:3306/firm_management";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "277353MYSQL.";
 
     private static Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -72,14 +73,18 @@ public class cmpe343project2group4 {
 
 
     public void login() {
-        Scanner scanner = new Scanner(System.in);
+    	Console console = System.console();
+
+        if (console == null) {
+            System.out.println("No console available");
+            return;
+        }
 
         while (true) {
-            System.out.print("Username: ");
-            String username = scanner.nextLine();
-            System.out.print("Password: ");
-            String password = scanner.nextLine();
-
+        	String username = console.readLine("Username: ");
+            char[] passwordArray = console.readPassword("Password: "); 
+            String password = new String(passwordArray);
+            
             String query = "SELECT * FROM employees WHERE username = ? AND password = ?";
             try (Connection connection = connect();
                  PreparedStatement preparedStatement = connection.prepareStatement(query)) {
