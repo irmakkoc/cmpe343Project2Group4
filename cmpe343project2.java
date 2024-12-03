@@ -178,16 +178,17 @@ public class cmpe343project2group4 {
 
 
     public static void showRegularMenu(String username) {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("\n--- Regular Menu ---");
-            System.out.println("1. Display Profile");
-            System.out.println("2. Update Profile");
-            System.out.println("3. Logout");
-            System.out.print("Your Choice: ");
+    Scanner scanner = new Scanner(System.in);
+    while (true) {
+        System.out.println("\n--- Regular Menu ---");
+        System.out.println("1. Display Profile");
+        System.out.println("2. Update Profile");
+        System.out.println("3. Logout");
+        System.out.print("Your choice: ");
 
+        if (scanner.hasNextInt()) { 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
@@ -200,10 +201,14 @@ public class cmpe343project2group4 {
                     logout();
                     return; 
                 default:
-                    System.out.println("Geçersiz seçim. Tekrar deneyin.");
+                    System.out.println("Invalid choice. Try again."); 
             }
+        } else {
+            System.out.println("Invalid input. Please enter a number."); 
+            scanner.nextLine(); 
         }
     }
+}
 
 
     public static void logout() {
