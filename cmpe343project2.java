@@ -483,7 +483,7 @@ public class cmpe343project2group4 {
 	    private static void hireEmployee() {
 	        Scanner scanner = new Scanner(System.in);
 
-	                String name = null;
+	        String name = null;
 	        while (true) {
 	            try {
 	                System.out.print("Enter name: ");
@@ -543,8 +543,8 @@ public class cmpe343project2group4 {
 	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
 	            }
 	        }
-		    
-		String date_of_start = null;
+	        
+	        String date_of_start = null;
 	        while (true) {
 	            System.out.print("Enter date of start (YYYY-MM-DD): ");
 	            date_of_start = scanner.nextLine();
@@ -580,7 +580,7 @@ public class cmpe343project2group4 {
 	            stmt.setString(3, username);
 	            stmt.setString(4, role);
 	            stmt.setString(5, date_of_birth);
-		    stmt.setString(6, date_of_start);
+	            stmt.setString(6, date_of_start);
 	            stmt.setString(7, email);
 	            stmt.setString(8, phone_no);
 
@@ -594,8 +594,8 @@ public class cmpe343project2group4 {
 	            System.out.println("Error: " + e.getMessage());
 	        }
 	    }
-
-	private static boolean isUsernameTaken(String username) {
+	    
+	    private static boolean isUsernameTaken(String username) {
 	        String query = "SELECT COUNT(*) FROM employees WHERE username = ?";
 	        try (Connection connection = connect();
 	             PreparedStatement stmt = connection.prepareStatement(query)) {
