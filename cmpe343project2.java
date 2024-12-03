@@ -336,106 +336,176 @@ public class cmpe343project2group4 {
 
 
 
-    private static void updateEmployeeNonProfileFields() {
-        Scanner scanner = new Scanner(System.in);
+   private static void updateEmployeeNonProfileFields() {
+	        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter the username of the employee to update: ");
-        String username = scanner.nextLine();
+	        String targetUsername = null;
+	        while (true) {
+	            System.out.print("Enter the username of the employee to update: ");
+	            targetUsername = scanner.nextLine();
 
-        String checkQuery = "SELECT * FROM employees WHERE username = ?";
-        try (Connection connection = connect();
-             PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+	            String checkQuery = "SELECT * FROM employees WHERE username = ?";
+	            try (Connection connection = connect();
+	                 PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
 
-            checkStmt.setString(1, username);
-            ResultSet rs = checkStmt.executeQuery();
+	                checkStmt.setString(1, targetUsername);
+	                ResultSet rs = checkStmt.executeQuery();
 
-            if (!rs.next()) {
-                System.out.println("No employee found with the given username.");
-                return;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while checking user existence: " + e.getMessage());
-            return;
-        }
+	                if (rs.next()) {
+	                    System.out.println("Employee found: " + rs.getString("name") + " " + rs.getString("surname"));
+	                    break; 
+	                } else {
+	                    System.out.println("No employee found with the given username. Please try again.");
+	                }
+	            } catch (SQLException e) {
+	                System.out.println("Error while checking user existence: " + e.getMessage());
+	                return;
+	            }
+	        }
 
-        System.out.println("\nWhich field do you want to update?");
-        System.out.println("[1] Name");
-        System.out.println("[2] Surname");
-        System.out.println("[3] Role");
-        System.out.print("Your choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+	        boolean continueUpdate = true;
+	        while (continueUpdate) {
+	            System.out.println("\n--- Update Employee Non-Profile Fields ---");
+	            System.out.println("Enter 1 to Update Name");
+	            System.out.println("Enter 2 to Update Surname");
+	            System.out.println("Enter 3 to Update Role");
+	            System.out.println("Enter 4 to Update Date of Birth (YYYY-MM-DD)");
+	            System.out.println("Enter 5 to Go Back to Main Menu");
 
-        String query = null;
-        String newValue = null;
+	            System.out.print("Your choice: ");
+	            int choice = scanner.nextInt();
+	            scanner.nextLine(); 
 
-        switch (choice) {
-            case 1:
-                System.out.print("Enter new Name: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET name = ? WHERE username = ?";
-                break;
-            case 2:
-                System.out.print("Enter new Surname: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET surname = ? WHERE username = ?";
-                break;
-            case 3:
-                System.out.print("Enter new Role: ");
-                newValue = scanner.nextLine();
-                query = "UPDATE employees SET role = ? WHERE username = ?";
-                break;
-            default:
-                System.out.println("Invalid choice. No changes made.");
-                return;
-        }
+	            String fieldName = null;
+	            String newValue = null;
 
-        try (Connection connection = connect();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+	            switch (choice) {
+	                case 1:
+	                    System.out.print("Enter new Name: ");
+	                    newValue = scanner.nextLine();
+	                    fieldName = "name";
+	                    break;
+	                case 2:
+	                    System.out.print("Enter new Surname: ");
+	                    newValue = scanner.nextLine();
+	                    fieldName = "surname";
+	                    break;
+	                case 3:
+	                    while (true) {
+	                        System.out.print("Enter new Role (manager, engineer, technician, intern): ");
+	                        newValue = scanner.nextLine().toLowerCase();
+	                        if (newValue.equals("manager") || newValue.equals("engineer") || newValue.equals("technician") || newValue.equals("intern")) {
+	                            fieldName = "role";
+	                            break; 
+	                        } else {
+	                            System.out.println("Invalid role. Please enter one of the following: manager, engineer, technician, intern.");
+	                        }
+	                    }
+	                    break;
+	                case 4:
+	                    while (true) {
+	                        System.out.print("Enter new Date of Birth (YYYY-MM-DD): ");
+	                        newValue = scanner.nextLine();
+	                        if (isValidDate(newValue)) {
+	                            fieldName = "dateofbirth";
+	                            break;
+	                        } else {
+	                            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	                        }
+	                    }
+	                    break;
+	                case 5:
+	                    System.out.println("Returning to the previous menu...");
+	                    continueUpdate = false;
+	                    continue; 
+	                default:
+	                    System.out.println("Invalid choice. Try again.");
+	                    continue;
+	            }
 
-            stmt.setString(1, newValue);
-            stmt.setString(2, username);
+	            if (fieldName != null && newValue != null) {
+	                String updateQuery = "UPDATE employees SET " + fieldName + " = ? WHERE username = ?";
+	                try (Connection connection = connect();
+	                     PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
 
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Field updated successfully!");
-            } else {
-                System.out.println("No employee found with the given username.");
-            }
+	                    updateStmt.setString(1, newValue);
+	                    updateStmt.setString(2, targetUsername);
 
-        } catch (SQLException e) {
-            System.out.println("Error while updating employee: " + e.getMessage());
-        }
-    }
+	                    int rowsAffected = updateStmt.executeUpdate();
+	                    if (rowsAffected > 0) {
+	                        System.out.println(fieldName + " updated successfully for " + targetUsername + "!");
+	                    } else {
+	                        System.out.println("Failed to update the field.");
+	                    }
+	                } catch (SQLException e) {
+	                    System.out.println("Error while updating " + fieldName + ": " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+
+
+	    
+	    
+	    private static boolean isValidDate(String date) {
+	        return date.matches("\\d{4}-\\d{2}-\\d{2}");
+	    }
 
 
 
-    private static void hireEmployee() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter surname: ");
-        String surname = scanner.nextLine();
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter role: ");
-        String role = scanner.nextLine();
+	    private static void hireEmployee() {
+	        Scanner scanner = new Scanner(System.in);
 
-        String query = "INSERT INTO employees (name, surname, username, role, password) VALUES (?, ?, ?, ?, 'default123')";
-        try (Connection connection = connect();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+	        System.out.print("Enter name: ");
+	        String name = scanner.nextLine();
+	        System.out.print("Enter surname: ");
+	        String surname = scanner.nextLine();
+	        System.out.print("Enter username: ");
+	        String username = scanner.nextLine();
 
-            stmt.setString(1, name);
-            stmt.setString(2, surname);
-            stmt.setString(3, username);
-            stmt.setString(4, role);
-            stmt.executeUpdate();
+	        String role = null;
+	        while (true) {
+	            System.out.print("Enter role (manager, engineer, technician, intern): ");
+	            role = scanner.nextLine().toLowerCase();
+	            if (role.equals("manager") || role.equals("engineer") || role.equals("technician") || role.equals("intern")) {
+	                break;
+	            } else {
+	                System.out.println("Invalid role. Please enter one of the following: manager, engineer, technician, intern.");
+	            }
+	        }
 
-            System.out.println("New employee hired successfully.");
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
+	        String dateOfBirth = null;
+	        while (true) {
+	            System.out.print("Enter date of birth (YYYY-MM-DD): ");
+	            dateOfBirth = scanner.nextLine();
+	            if (isValidDate(dateOfBirth)) {
+	                break;
+	            } else {
+	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	            }
+	        }
+
+	        String query = "INSERT INTO employees (name, surname, username, role, dateofbirth, password) VALUES (?, ?, ?, ?, ?, 'default123')";
+
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, name);
+	            stmt.setString(2, surname);
+	            stmt.setString(3, username);
+	            stmt.setString(4, role);
+	            stmt.setString(5, dateOfBirth);
+
+	            int rowsAffected = stmt.executeUpdate();
+	            if (rowsAffected > 0) {
+	                System.out.println("New employee hired successfully.");
+	            } else {
+	                System.out.println("Failed to hire employee.");
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
+	    }
 
     private static void fireEmployee(String loggedInUsername) {
         Scanner scanner = new Scanner(System.in);
