@@ -233,8 +233,8 @@ public class cmpe343project2group4 {
     private static void updateProfile1(String username) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nProfil Güncelleme");
-        System.out.print("Yeni Telefon Numarası: ");
+        System.out.println("\nUpdate Profile");
+        System.out.print("New Phone Number: ");
         String newPhone = scanner.nextLine();
 
         System.out.print("Yeni E-posta: ");
@@ -255,13 +255,13 @@ public class cmpe343project2group4 {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Profil başarıyla güncellendi!");
+                System.out.println("Profile was updated successfully!");
             } else {
-                System.out.println("Profil güncellenemedi. Kullanıcı bulunamadı.");
+                System.out.println("Profile couldn't be updated. Cannot find user.");
             }
 
         } catch (SQLException e) {
-            System.err.println("Profil güncelleme sırasında hata: " + e.getMessage());
+            System.err.println("Error while updating profile: " + e.getMessage());
         }
     }
 
@@ -271,7 +271,7 @@ public class cmpe343project2group4 {
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            System.out.println("\n--- Tüm Çalışanlar ---");
+            System.out.println("\n--- All Employees ---");
             while (resultSet.next()) {
                 System.out.println("ID: " + resultSet.getInt("employee_id"));
                 System.out.println("Name: " + resultSet.getString("name"));
@@ -280,7 +280,7 @@ public class cmpe343project2group4 {
                 System.out.println("--------------------");
             }
         } catch (SQLException e) {
-            System.out.println("Hata: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -579,18 +579,18 @@ public class cmpe343project2group4 {
                     break;
                 case 2:
                     try {
-                        System.out.print("Telefon numaranızı girin: ");
+                        System.out.print("Enter your phone number: ");
                         String phoneNumber = scanner.nextLine();
 
                         if (phoneNumber.matches(".*[a-zA-Z]+.*")) {
-                            throw new IllegalArgumentException("Telefon numarası harf içeremez.");
+                            throw new IllegalArgumentException("Phone number cannot contain letters.");
                         }
 
                         updateField(username, "phone_no", phoneNumber);
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     } catch (Exception e) {
-                        System.out.println("Bir hata oluştu: " + e.getMessage());
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
 
