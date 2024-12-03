@@ -1,5 +1,4 @@
 package cmpe343project2group4;
-import java.io.Console;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -73,17 +72,13 @@ public class cmpe343project2group4 {
 
 
     public void login() {
-    	Console console = System.console();
-
-        if (console == null) {
-            System.out.println("No console available");
-            return;
-        }
-
+    	Scanner scanner = new Scanner(System.in);
+    	
         while (true) {
-        	String username = console.readLine("Username: ");
-            char[] passwordArray = console.readPassword("Password: "); 
-            String password = new String(passwordArray);
+        	System.out.print("Username: ");
+            String username = scanner.nextLine();
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
             
             String query = "SELECT * FROM employees WHERE username = ? AND password = ?";
             try (Connection connection = connect();
