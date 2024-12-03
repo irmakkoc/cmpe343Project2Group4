@@ -18,7 +18,7 @@ public class cmpe343project2group4 {
 
     private static final String URL = "jdbc:mysql://localhost:3306/firm_management";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "277353MYSQL.";
 
     private static Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -63,7 +63,7 @@ public class cmpe343project2group4 {
 
         @Override
         public void showMenu() {
-            // Regular Employee için özel menü fonksiyonunu çağırın
+           
             showRegularMenu(username);
         }
     }
@@ -103,7 +103,7 @@ public class cmpe343project2group4 {
                         updatePasswordOnFirstLogin(username);
                     }
 
-                    // Create the correct employee instance based on role
+
                     Employee employee;
                     if ("manager".equals(role)) {
                         employee = new Manager(employee_id, name, surname, username);
@@ -111,8 +111,8 @@ public class cmpe343project2group4 {
                         employee = new RegularEmployee(employee_id, name, surname, username);
                     }
 
-                    employee.showMenu(); // This will call the correct menu based on the role
-                    return; // Exit the loop after showing the menu
+                    employee.showMenu(); 
+                    return; 
                 } else {
                     System.out.println("Incorrect username and/or password. Try again.");
                 }
@@ -198,7 +198,7 @@ public class cmpe343project2group4 {
                     break;
                 case 3:
                     logout();
-                    return; // return to login
+                    return; 
                 default:
                     System.out.println("Geçersiz seçim. Tekrar deneyin.");
             }
@@ -229,7 +229,7 @@ public class cmpe343project2group4 {
     }
 
 
-    // Manager menu operations
+    
     private static void updateProfile1(String username) {
         Scanner scanner = new Scanner(System.in);
 
@@ -287,7 +287,7 @@ public class cmpe343project2group4 {
     private static void displayEmployeesWithRole() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter role to filter by (e.g., manager, engineer): ");
-        String role = scanner.nextLine();
+        String role = scanner.nextLine().toLowerCase();
 
         String query = "SELECT * FROM employees WHERE role = ?";
         try (Connection connection = connect();
@@ -474,18 +474,18 @@ public class cmpe343project2group4 {
 	            }
 	        }
 
-	        String dateOfBirth = null;
+	        String date_of_birth = null;
 	        while (true) {
 	            System.out.print("Enter date of birth (YYYY-MM-DD): ");
-	            dateOfBirth = scanner.nextLine();
-	            if (isValidDate(dateOfBirth)) {
+	            date_of_birth = scanner.nextLine();
+	            if (isValidDate(date_of_birth)) {
 	                break;
 	            } else {
 	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
 	            }
 	        }
 
-	        String query = "INSERT INTO employees (name, surname, username, role, dateofbirth, password) VALUES (?, ?, ?, ?, ?, 'default123')";
+	        String query = "INSERT INTO employees (name, surname, username, role, date_of_birth, password) VALUES (?, ?, ?, ?, ?, 'default123')";
 
 	        try (Connection connection = connect();
 	             PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -494,7 +494,7 @@ public class cmpe343project2group4 {
 	            stmt.setString(2, surname);
 	            stmt.setString(3, username);
 	            stmt.setString(4, role);
-	            stmt.setString(5, dateOfBirth);
+	            stmt.setString(5, date_of_birth);
 
 	            int rowsAffected = stmt.executeUpdate();
 	            if (rowsAffected > 0) {
@@ -534,7 +534,7 @@ public class cmpe343project2group4 {
         }
     }
 
-    // Regular Employee Menu Operations
+
     private static void displayProfile(String username) {
         String query = "SELECT password, phone_no, email, role, date_of_birth FROM employees WHERE username = ?";
         try (Connection connection = connect();
@@ -741,7 +741,7 @@ public class cmpe343project2group4 {
         for (int i = array.length - 1; i>=0; i--)
         {
             int index = (array[i] / place) % 10;
-            result[count[index]-1]] = array[i];
+            result[count[index]-1] = array[i];
             count[index]--;
         }
         for (int i = 0; i < array.length; i++)
