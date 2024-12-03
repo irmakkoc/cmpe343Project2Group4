@@ -459,12 +459,44 @@ public class cmpe343project2group4 {
 	    private static void hireEmployee() {
 	        Scanner scanner = new Scanner(System.in);
 
-	        System.out.print("Enter name: ");
-	        String name = scanner.nextLine();
-	        System.out.print("Enter surname: ");
-	        String surname = scanner.nextLine();
-	        System.out.print("Enter username: ");
-	        String username = scanner.nextLine();
+	                String name = null;
+	        while (true) {
+	            try {
+	                System.out.print("Enter name: ");
+	                name = scanner.nextLine();
+	                if (!name.matches("[a-zA-ZğüşıöçĞÜŞİÖÇ]+")) { 
+	                    throw new IllegalArgumentException("Name must contain only letters.");
+	                }
+	                break;
+	            } catch (IllegalArgumentException e) {
+	                System.out.println(e.getMessage());
+	            }
+	        }
+
+	        String surname = null;
+	        while (true) {
+	            try {
+	                System.out.print("Enter surname: ");
+	                surname = scanner.nextLine();
+	                if (!surname.matches("[a-zA-ZğüşıöçĞÜŞİÖÇ]+")) { 
+	                    throw new IllegalArgumentException("Surname must contain only letters.");
+	                }
+	                break;
+	            } catch (IllegalArgumentException e) {
+	                System.out.println(e.getMessage());
+	            }
+	        }
+	        
+	        String username = null;
+	        while (true) {
+	            System.out.print("Enter username: ");
+	            username = scanner.nextLine();
+	            if (isUsernameTaken(username)) {
+	                System.out.println("This username is already taken. Please try another.");
+	            } else {
+	                break;
+	            }
+	        }
 
 	        String role = null;
 	        while (true) {
