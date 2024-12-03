@@ -277,6 +277,9 @@ public class cmpe343project2group4 {
                 System.out.println("Name: " + resultSet.getString("name"));
                 System.out.println("Surname: " + resultSet.getString("surname"));
                 System.out.println("Role: " + resultSet.getString("role"));
+		System.out.println("Phone No: " + resultSet.getString("phone_no"));
+                System.out.println("Date of Birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Date of Start: " + resultSet.getString("date_of_start"));
                 System.out.println("--------------------");
             }
         } catch (SQLException e) {
