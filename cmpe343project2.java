@@ -566,6 +566,23 @@ public class cmpe343project2group4 {
 	        }
 	    }
 
+	private static boolean isUsernameTaken(String username) {
+	        String query = "SELECT COUNT(*) FROM employees WHERE username = ?";
+	        try (Connection connection = connect();
+	             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+	            stmt.setString(1, username);
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                if (rs.next() && rs.getInt(1) > 0) {
+	                    return true; 
+	                }
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error checking username: " + e.getMessage());
+	        }
+	        return false;
+	    }
+
     private static void fireEmployee(String loggedInUsername) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter employee username to fire: ");
