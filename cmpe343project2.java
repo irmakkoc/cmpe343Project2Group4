@@ -5,12 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Collections;
 import java.util.*;
 
 
@@ -285,30 +279,40 @@ public class cmpe343project2group4 {
     }
 
     private static void displayEmployeesWithRole() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter role to filter by (e.g., manager, engineer): ");
-        String role = scanner.nextLine().toLowerCase();
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter role to filter by (e.g., manager, engineer): ");
+    String role = scanner.nextLine().toLowerCase();
 
-        String query = "SELECT * FROM employees WHERE role = ?";
-        try (Connection connection = connect();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+    String query = "SELECT * FROM employees WHERE role = ?";
+    try (Connection connection = connect();
+         PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            stmt.setString(1, role);
-            ResultSet rs = stmt.executeQuery();
+        stmt.setString(1, role);
+        ResultSet rs = stmt.executeQuery();
 
-            System.out.println("\n--- Employees with Role: " + role + " ---");
-            while (rs.next()) {
-                System.out.println("Name: " + rs.getString("name"));
-                System.out.println("Surname: " + rs.getString("surname"));
-                System.out.println("Username: " + rs.getString("username"));
-                System.out.println("Phone number: " + rs.getString("phone_no"));
-                System.out.println("Email: " + rs.getString("email"));
-                System.out.println("--------------------");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+        
+        boolean hasEmployees = false;
+
+        System.out.println("\n--- Employees with Role: " + role + " ---");
+        while (rs.next()) {
+            hasEmployees = true; 
+            System.out.println("Name: " + rs.getString("name"));
+            System.out.println("Surname: " + rs.getString("surname"));
+            System.out.println("Username: " + rs.getString("username"));
+            System.out.println("Phone number: " + rs.getString("phone_no"));
+            System.out.println("Email: " + rs.getString("email"));
+            System.out.println("--------------------");
         }
+
+        if (!hasEmployees) {
+            System.out.println("No employees found with the role: " + role);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
     }
+}
+
 
     private static void displayEmployeeWithUsername() {
         Scanner scanner = new Scanner(System.in);
@@ -659,329 +663,3 @@ public class cmpe343project2group4 {
         String query = "UPDATE employees SET password = ?, first_login = FALSE WHERE username = ?";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, newPassword);
-            preparedStatement.setString(2, username);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Password updated successfully. Proceeding to the menu.");
-            } else {
-                System.out.println("Failed to update password. Contact the administrator.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-
-
-
-    private static void updateField(String username, String fieldName, String newValue) {
-        String query = "UPDATE employees SET " + fieldName + " = ? WHERE username = ?";
-        try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, newValue);
-            preparedStatement.setString(2, username);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println(fieldName + " updated successfully.");
-            } else {
-                System.out.println("Update failed.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    public static void displayLaptopAsciiArt() {
-
-        String reset = "\u001B[0m";
-        String white = "\u001B[37m";
-        String blue = "\u001B[34m";
-        String green = "\u001B[32m";
-        String yellow = "\u001B[33m";
-        String cyan = "\u001B[36m";
-        String red = "\u001B[31m";
-
-        System.out.println();
-        System.out.println(cyan + "█████████████████████████████████████████████████████████████" + reset);
-        System.out.println(cyan + "██                                                         ██" + reset);
-        System.out.println(cyan + "██  " + red + "   ██   ██ ███████  ███     ███      █████████       " +cyan + "  ██" + reset);
-        System.out.println(cyan + "██  " + red + "   ██   ██ ██       ███     ███      ██     ██       " + cyan + "  ██" + reset);
-        System.out.println(cyan + "██  " + red + "   ███████ ██████   ███     ███      ██     ██       " + cyan + "  ██" + reset);
-        System.out.println(cyan + "██  " + red + "   ██   ██ ██       ███     ███      ██     ██       " + cyan + "  ██" + reset);
-        System.out.println(cyan + "██  " + red + "   ██   ██ ███████  ███████ ████████ █████████       " + cyan + "  ██" + reset);
-        System.out.println(cyan + "██  " + red + "                                                     " + cyan + "  ██" + reset);
-        System.out.println(cyan + "██                                                         ██" + reset);
-        System.out.println(cyan + "█████████████████████████████████████████████████████████████" + reset);
-        System.out.println(cyan + " ██                                                         ██" + reset);
-        System.out.println(cyan + "  ██      " + yellow + "███████████████████████████████████████" + cyan + "            ██" + reset);
-        System.out.println(cyan + "   ██      " + yellow + "██                                   ██" + cyan + "            ██" + reset);
-        System.out.println(cyan + "    ██      " + yellow + "██   Welcome to the Firm Management  ██" + cyan + "            ██" + reset);
-        System.out.println(cyan + "     ██      " + yellow + "██                                   ██" + cyan + "            ██" + reset);
-        System.out.println(cyan + "      ██      " + yellow + "███████████████████████████████████████" + cyan + "            ██" + reset);
-        System.out.println(cyan + "       ██                                                         ██" + reset);
-        System.out.println(cyan + "        █████████████████████████████████████████████████████████████" + reset);
-        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
-        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
-        System.out.println(white + "           ██████████████████████████████████████████████████" + reset);
-        System.out.println();
-    }
-
-    private static int[] radixArray, shellArray, heapArray, insertionArray;
-    public static void runAlgorithms() {
-        Comparator<Integer> ascendingComparator = getAscendingComparator();
-        int valid;
-        long exeStartTime, exeEndTime;
-        Scanner scanner = new Scanner(System.in);
-        do {
-            valid = 1; //for exiting this should turn 0
-            int size = readInputAlgo(scanner);
-            exeStartTime = System.nanoTime();
-
-            int[] randomArray = generateRandomArray(size);
-            radixArray = new int[size];
-            shellArray = new int[size];
-            heapArray = new int[size];
-            insertionArray = new int[size];
-            copyArrays(randomArray);
-            List<Integer> arrayList = arrToList(randomArray);
-            calculateDuration(radixArray, shellArray, heapArray, insertionArray, arrayList, ascendingComparator);
-            exeEndTime = System.nanoTime();
-            System.out.println("Execution Duration: " + (exeEndTime - exeStartTime) + " ns");
-            valid = readInput(scanner);
-        } while(valid !=0 );
-
-    }
-    public static int[] generateRandomArray(int size) // size 1000-10000 arasinda olacak.
-    {
-        Random rand = new Random();
-        int[] array = new int[size];
-        for (int i = 0; i < size; i++)
-        {
-            array[i] = rand.nextInt(20001) - 10000;
-        }
-        return array;
-    }
-
-    private static void countingSort(int[] array, int place) {
-        int[] result = new int[array.length];
-        int[] count = new int[20];
-
-        for (int i = 0; i < array.length; i++) {
-            int index = (array[i] / place % 10) + 9;
-            count[index]++;
-        }
-
-        for (int i = 1; i < 20; i++) {
-            count[i] += count[i - 1];
-        }
-
-        for (int i = array.length - 1; i >= 0; i--) {
-            int index = (array[i] / place % 10) + 9;
-            result[count[index] - 1] = array[i];
-            count[index]--;
-        }
-
-        for (int i = 0; i < array.length; i++) {
-            array[i] = result[i];
-        }
-    }
-
-
-    private static void radixSort(int array[]) {
-        int max = array[0];
-        for (int i = 1; i < array.length; i++)
-        {
-            if (array[i] > max)
-            {
-                max = array[i];
-            }
-        }
-
-        for (int place = 1; max / place > 0; place *= 10)
-        {
-            countingSort(array, place);
-        }
-    }
-
-    private static void shellSort(int array[]) {
-        for (int interval = array.length / 2; interval > 0; interval = interval / 2)
-        {
-            for (int i = interval; i < array.length; i += 1)
-            {
-                int temp = array[i];
-                int j;
-                for (j = i; j >= interval && array[j - interval] > temp; j -= interval)
-                {
-                    array[j] = array[j - interval];
-                }
-                array[j] = temp;
-            }
-        }
-    }
-
-    private static void heapSort(int arr[]) {
-
-        for (int i = arr.length / 2 - 1; i >= 0; i--) {
-            heapify(arr, arr.length, i);
-        }
-
-        for (int i = arr.length - 1; i >= 0; i--) {
-            int temp = arr[0];
-            arr[0] = arr[i];
-            arr[i] = temp;
-
-            heapify(arr, i, 0);
-        }
-    }
-
-    private static void heapify(int arr[], int size, int i) {
-        int largest = i;
-        int l = 2 * i + 1;
-        int r = 2 * i + 2;
-
-        if (l < size && arr[l] > arr[largest])
-            largest = l;
-
-        if (r < size && arr[r] > arr[largest])
-            largest = r;
-
-        if (largest != i)
-        {
-            int swap = arr[i];
-            arr[i] = arr[largest];
-            arr[largest] = swap;
-
-            heapify(arr, size, largest);
-        }
-    }
-
-    private static void insertionSort(int array[]) {
-
-        for (int step = 1; step < array.length; step++)
-        {
-            int key = array[step];
-            int j = step - 1;
-
-            while (j >= 0 && key < array[j])
-            {
-                array[j + 1] = array[j];
-                --j;
-            }
-
-            array[j + 1] = key;
-        }
-    }
-
-    private static Comparator<Integer> getAscendingComparator() {
-        return new Comparator<>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        };
-    };
-
-    private static int readInputAlgo(Scanner scanner) {
-        int result = 0;
-        boolean input = true;
-        while (input)
-        {
-            System.out.print("Enter number between 1000 and 10000:");
-            try {
-                result = scanner.nextInt();
-                if (result < 1000 || result > 10000)
-                {
-                    System.out.println("Entered number should be between 1000 and 10000!");
-                }
-                else
-                {
-                    input = false;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Enter valid number!");
-                scanner.nextLine();
-            }
-        }
-        return result;
-    }
-
-    private static int readInput(Scanner scanner) {
-        int result = 0;
-        while (true) {
-            System.out.print("Enter 0 for exiting or 1 for continue:");
-            try {
-                result = scanner.nextInt();
-                if (result == 0) {
-                    break;
-                }
-                else if (result == 1)
-                {
-                    break;
-                }
-                else {
-                    System.out.println("Enter valid number!");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Enter valid number!");
-            }
-        }
-        return result;
-    }
-
-    private static void copyArrays(int[] array) {
-        for (int i = 0; i < array.length; i++)
-        {
-            radixArray[i] = array[i];
-            shellArray[i] = array[i];
-            heapArray[i] = array[i];
-            insertionArray[i] = array[i];
-        }
-    }
-
-    private static void calculateDuration(int[] radixArray, int[] shellArray, int[] heapArray, int[] insertionArray, List<Integer> arrayList, Comparator<Integer> ascendingComparator) {
-        long startTime, endTime;
-        startTime = System.nanoTime();
-        radixSort(radixArray);
-        endTime = System.nanoTime();
-        System.out.println("Radix Sort Duration: " + (endTime - startTime) + " ns");
-
-        startTime = System.nanoTime();
-        shellSort(shellArray);
-        endTime = System.nanoTime();
-        System.out.println("Shell Sort Duration: " + (endTime - startTime) + " ns");
-
-        startTime = System.nanoTime();
-        heapSort(heapArray);
-        endTime = System.nanoTime();
-        System.out.println("Heap Sort Duration: " + (endTime - startTime) + " ns");
-
-        startTime = System.nanoTime();
-        insertionSort(insertionArray);
-        endTime = System.nanoTime();
-        System.out.println("Insertion Sort Duration: " + (endTime - startTime) + " ns");
-
-        startTime = System.nanoTime();
-        Collections.sort(arrayList, ascendingComparator);
-        endTime = System.nanoTime();
-        System.out.println("Collection.sort() Duration: " + (endTime - startTime) + " ns");
-    }
-
-    private static List<Integer> arrToList(int[] array) {
-        List<Integer> list = new ArrayList<>();
-        for (int num : array) {
-            list.add(num);
-        }
-        return list;
-    }
-
-    public static void main(String[] args) {
-        displayLaptopAsciiArt();
-        cmpe343project2group4 instance = new cmpe343project2group4();
-        instance.login();
-    }
-}
