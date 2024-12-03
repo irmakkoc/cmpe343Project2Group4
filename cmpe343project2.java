@@ -18,7 +18,7 @@ public class cmpe343project2group4 {
 
     private static final String URL = "jdbc:mysql://localhost:3306/firm_management";
     private static final String USER = "root";
-    private static final String PASSWORD = "277353MYSQL.";
+    private static final String PASSWORD = "";
 
     private static Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -242,10 +242,10 @@ public class cmpe343project2group4 {
         System.out.print("New Phone Number: ");
         String newPhone = scanner.nextLine();
 
-        System.out.print("Yeni E-posta: ");
+        System.out.print("New Email: ");
         String newEmail = scanner.nextLine();
 
-        System.out.print("Yeni Şifre: ");
+        System.out.print("New Password: ");
         String newPassword = scanner.nextLine();
 
         String query = "UPDATE employees SET phone_no = ?, email = ?, password = ? WHERE username = ?";
