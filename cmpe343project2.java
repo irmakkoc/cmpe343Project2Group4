@@ -178,7 +178,7 @@ public class cmpe343project2group4 {
             System.out.println("1. Display Profile");
             System.out.println("2. Update Profile");
             System.out.println("3. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -194,7 +194,7 @@ public class cmpe343project2group4 {
                     logout();
                     return; 
                 default:
-                    System.out.println("Geçersiz seçim. Tekrar deneyin.");
+                    System.out.println("Invalid Choice");
             }
         }
     }
@@ -227,7 +227,7 @@ public class cmpe343project2group4 {
     private static void updateProfile1(String username) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nProfil Güncelleme");
+        System.out.println("\nUpdate Profile");
         System.out.print("New Phone Number: ");
         String newPhone = scanner.nextLine();
 
@@ -265,7 +265,7 @@ public class cmpe343project2group4 {
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            System.out.println("\n--- Tüm Çalışanlar ---");
+            System.out.println("\n--- All Employees ---");
             while (resultSet.next()) {
                 System.out.println("ID: " + resultSet.getInt("employee_id"));
                 System.out.println("Name: " + resultSet.getString("name"));
@@ -713,9 +713,9 @@ public class cmpe343project2group4 {
             System.out.println("Enter 2 to Update Phone Number");
             System.out.println("Enter 3 to Update E-mail");
             System.out.println("Enter 4 to Go Back to Main Menu");
-
+    
             int choice = -1;
-
+    
             try {
                 System.out.print("Your choice: ");
                 choice = Integer.parseInt(scanner.nextLine());
@@ -723,43 +723,55 @@ public class cmpe343project2group4 {
                 System.out.println("Choice invalid! Please enter a number between 1 and 4.");
                 continue; 
             }
-
+    
             switch (choice) {
                 case 1:
                     System.out.print("Enter Your New Password: ");
                     String newPassword = scanner.nextLine();
                     updateField(username, "password", newPassword);
                     break;
+    
                 case 2:
                     try {
-                        System.out.print("Telefon numaranızı girin: ");
+                        System.out.print("Enter Your New Phone Number: ");
                         String phoneNumber = scanner.nextLine();
-
+    
                         if (phoneNumber.matches(".*[a-zA-Z]+.*")) {
-                            throw new IllegalArgumentException("Telefon numarası harf içeremez.");
+                            throw new IllegalArgumentException("Phone number cannot contain letters.");
                         }
-
+    
                         updateField(username, "phone_no", phoneNumber);
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     } catch (Exception e) {
-                        System.out.println("Bir hata oluştu: " + e.getMessage());
+                        System.out.println("An error occurred: " + e.getMessage());
                     }
                     break;
-
+    
                 case 3:
-                    System.out.print("Enter Your new E-mail: ");
-                    String newEmail = scanner.nextLine();
-                    updateField(username, "email", newEmail);
+                    while (true) {
+                        System.out.print("Enter Your New E-mail: ");
+                        String newEmail = scanner.nextLine();
+    
+                        
+                        if (newEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                            updateField(username, "email", newEmail);
+                            break; 
+                        } else {
+                            System.out.println("Invalid e-mail format. Please try again.");
+                        }
+                    }
                     break;
+    
                 case 4:
-                    return;
+                    return; 
+    
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
-
         }
     }
+    
 
     private static void updatePasswordOnFirstLogin(String username) {
         Scanner scanner = new Scanner(System.in);
