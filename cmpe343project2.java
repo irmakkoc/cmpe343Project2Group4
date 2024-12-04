@@ -131,7 +131,7 @@ public class cmpe343project2group4 {
             System.out.println("7. Fire Employee");
             System.out.println("8. Run Algorithms");
             System.out.println("9. Logout");
-            System.out.print("Seçiminiz: ");
+            System.out.print("Your choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -274,7 +274,7 @@ public class cmpe343project2group4 {
                 System.out.println("--------------------");
             }
         } catch (SQLException e) {
-            System.out.println("Hata: " + e.getMessage());
+            System.out.println("Errror: " + e.getMessage());
         }
     }
 
@@ -697,10 +697,10 @@ public class cmpe343project2group4 {
                 System.out.println("Role: " + resultSet.getString("role"));
                 System.out.println("Date of birth: " + resultSet.getString("date_of_birth"));
             } else {
-                System.out.println("Profil bilgisi bulunamadı.");
+                System.out.println("Couldn't find the profile.");
             }
         } catch (SQLException e) {
-            System.out.println("Hata: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
