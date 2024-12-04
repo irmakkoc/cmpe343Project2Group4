@@ -576,23 +576,29 @@ public class cmpe343project2group4 {
 
 	        String date_of_birth = null;
 	        while (true) {
-	            System.out.print("Enter date of birth (YYYY-MM-DD): ");
-	            date_of_birth = scanner.nextLine();
-	            if (isValidDate(date_of_birth)) {
-	                break;
-	            } else {
-	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	            try {
+	                System.out.print("Enter date of birth (YYYY-MM-DD): ");
+	                date_of_birth = scanner.nextLine();
+	                if (!isValidDate(date_of_birth)) { 
+	                    throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
+	                }
+	                break; 
+	            } catch (IllegalArgumentException e) {
+	                System.out.println(e.getMessage()); 
 	            }
 	        }
-	        
+
 	        String date_of_start = null;
 	        while (true) {
-	            System.out.print("Enter date of start (YYYY-MM-DD): ");
-	            date_of_start = scanner.nextLine();
-	            if (isValidDate(date_of_start)) {
-	                break;
-	            } else {
-	                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	            try {
+	                System.out.print("Enter date of start (YYYY-MM-DD): ");
+	                date_of_start = scanner.nextLine();
+	                if (!isValidDate(date_of_start)) { 
+	                    throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
+	                }
+	                break; 
+	            } catch (IllegalArgumentException e) {
+	                System.out.println(e.getMessage()); 
 	            }
 	        }
 	        
