@@ -888,7 +888,7 @@ public class cmpe343project2group4 {
                         System.out.print("Enter your new Phone Number: ");
                         String phoneNumber = scanner.nextLine();
 
-                        if (phoneNumber.matches(".*[a-zA-Z]+.*")) {
+                        if (!phoneNumber.matches("\\d+")) {
                             throw new IllegalArgumentException("Phone number can only contain digits.");
                         }
 
