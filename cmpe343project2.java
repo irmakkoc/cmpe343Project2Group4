@@ -343,7 +343,7 @@ public class cmpe343project2group4 {
 
 
 
-   private static void updateEmployeeNonProfileFields() {
+      private static void updateEmployeeNonProfileFields() {
 	        Scanner scanner = new Scanner(System.in);
 
 	        String targetUsername = null;
@@ -377,7 +377,10 @@ public class cmpe343project2group4 {
 	            System.out.println("Enter 2 to Update Surname");
 	            System.out.println("Enter 3 to Update Role");
 	            System.out.println("Enter 4 to Update Date of Birth (YYYY-MM-DD)");
-	            System.out.println("Enter 5 to Go Back to Main Menu");
+	            System.out.println("Enter 5 to Update Phone Number");
+	            System.out.println("Enter 6 to Update Email");
+	            System.out.println("Enter 7 to Update Date of Start (YYYY-MM-DD)");
+	            System.out.println("Enter 8 to Go Back to Main Menu");
 
 	            System.out.print("Your choice: ");
 	            int choice = scanner.nextInt();
@@ -430,21 +433,59 @@ public class cmpe343project2group4 {
 	                    }
 	                    break;
 	                case 4:
-	                    while (true) {
-	                        System.out.print("Enter new Date of Birth (YYYY-MM-DD): ");
-	                        newValue = scanner.nextLine();
-	                        if (isValidDate(newValue)) {
-	                            fieldName = "dateofbirth";
-	                            break;
-	                        } else {
-	                            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+	                	while (true) {
+	                        try {
+	                            System.out.print("Enter new Date of Birth (YYYY-MM-DD): ");
+	                            newValue = scanner.nextLine();
+	                            if (!isValidDate(newValue)) { 
+	                                throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
+	                            }
+	                            fieldName = "date_of_birth";
+	                            break; 
+	                        } catch (IllegalArgumentException e) {
+	                            System.out.println(e.getMessage()); 
 	                        }
 	                    }
 	                    break;
 	                case 5:
-	                    System.out.println("Returning to the previous menu...");
+	                	while (true) {
+	                        try {
+	                            System.out.print("Enter new Phone Number: ");
+	                            newValue = scanner.nextLine();
+	                            if (!newValue.matches("\\d+")) { // allow only numbers
+	                                throw new IllegalArgumentException("Phone number must contain only digits.");
+	                            }
+	                            fieldName = "phone_no";
+	                            break; 
+	                        } catch (IllegalArgumentException e) {
+	                            System.out.println(e.getMessage());
+	                        }
+	                    }
+	                    break;
+	                case 6:
+	                		System.out.print("Enter new Email: ");
+	                	    newValue = scanner.nextLine(); 
+	                	    fieldName = "email";
+	                	    break;
+	                case 7:
+	                	while (true) {
+	                        try {
+	                            System.out.print("Enter new Date of Start (YYYY-MM-DD): ");
+	                            newValue = scanner.nextLine();
+	                            if (!isValidDate(newValue)) { 
+	                                throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
+	                            }
+	                            fieldName = "date_of_start";
+	                            break; 
+	                        } catch (IllegalArgumentException e) {
+	                            System.out.println(e.getMessage()); 
+	                        }
+	                    }
+	                    break;
+	                case 8:
+	                	System.out.println("Returning to the previous menu...");
 	                    continueUpdate = false;
-	                    continue; 
+	                    continue;
 	                default:
 	                    System.out.println("Invalid choice. Try again.");
 	                    continue;
