@@ -610,8 +610,17 @@ public class cmpe343project2group4 {
 	            }
 	        }
 	        
-	        System.out.print("Enter email: ");
-	        String email = scanner.nextLine();
+	        String email = null;
+	            while (true) {
+	                System.out.print("Enter email: ");
+	                email = scanner.nextLine();
+	                
+	                if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+	                    break; 
+	                } else {
+	                    System.out.println("Invalid email format. Please enter a valid email (e.g., user@example.com).");
+	                }
+	            }
 	        
 	        String phone_no = null;
 	        while (true) {
