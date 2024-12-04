@@ -716,7 +716,7 @@ public class cmpe343project2group4 {
 
 
     private static void displayProfile(String username) {
-        String query = "SELECT password, phone_no, email, role, date_of_birth FROM employees WHERE username = ?";
+        String query = "SELECT username, role, name, surname, date_of_birth, date_of_start FROM employees WHERE username = ?";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -725,11 +725,12 @@ public class cmpe343project2group4 {
 
             if (resultSet.next()) {
                 System.out.println("\n--- Profile Information ---");
-                System.out.println("Password: " + resultSet.getString("password"));
-                System.out.println("Phone Number: " + resultSet.getString("phone_no"));
-                System.out.println("E-mail: " + resultSet.getString("email"));
+                System.out.println("Username: " + resultSet.getString("username"));
                 System.out.println("Role: " + resultSet.getString("role"));
-                System.out.println("Date of birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Name: " + resultSet.getString("name"));
+                System.out.println("Surname: " + resultSet.getString("surname"));
+                System.out.println("Date of Birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Date of Start: " + resultSet.getString("date_of_start"));
             } else {
                 System.out.println("Couldn't find the profile.");
             }
@@ -746,11 +747,7 @@ public class cmpe343project2group4 {
             System.out.println("Enter 1 to Update Password");
             System.out.println("Enter 2 to Update Phone Number");
             System.out.println("Enter 3 to Update E-mail");
-            System.out.println("Enter 4 to Update Name");
-            System.out.println("Enter 5 to Update Surname");
-            System.out.println("Enter 6 to Update Date of Birth");
-            System.out.println("Enter 7 to Update Date of Start");
-            System.out.println("Enter 8 to Go Back to Main Menu");
+            System.out.println("Enter 4 to Go Back to Main Menu");
 
             int choice = -1;
 
@@ -800,79 +797,7 @@ public class cmpe343project2group4 {
                     }
                     break;
                 case 4:
-                	while (true) {
-                        try {
-                            System.out.print("Enter Your New Name: ");
-                            String newName = scanner.nextLine();
-
-                            if (!newName.matches("^[a-zA-ZçÇğĞıİöÖşŞüÜ]+$")) {
-                                throw new IllegalArgumentException("Name can only contain letters.");
-                            }
-
-                            updateField(username, "name", newName);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-                    
-                case 5:
-                    while (true) {
-                        try {
-                            System.out.print("Enter Your New Surname: ");
-                            String newSurname = scanner.nextLine();
-
-                            if (!newSurname.matches("^[a-zA-ZçÇğĞıİöÖşŞüÜ]+$")) {
-                                throw new IllegalArgumentException("Surname can only contain letters.");
-                            }
-
-                            updateField(username, "surname", newSurname);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-                    
-                case 6:
-                    while (true) {
-                        try {
-                            System.out.print("Enter Your Date of Birth (YYYY-MM-DD): ");
-                            String dateOfBirth = scanner.nextLine();
-
-                            if (!isValidDate(dateOfBirth)) {
-                                throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
-                            }
-
-                            updateField(username, "date_of_birth", dateOfBirth);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-
-                case 7:
-                    while (true) {
-                        try {
-                            System.out.print("Enter Your Date of Start (YYYY-MM-DD): ");
-                            String dateOfStart = scanner.nextLine();
-
-                            if (!isValidDate(dateOfStart)) {
-                                throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
-                            }
-
-                            updateField(username, "date_of_start", dateOfStart);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-
-                case 8:
-                    return;
+                	return;
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
