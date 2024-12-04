@@ -388,14 +388,21 @@ public class cmpe343project2group4 {
 	            System.out.println("Enter 2 to Update Surname");
 	            System.out.println("Enter 3 to Update Role");
 	            System.out.println("Enter 4 to Update Date of Birth (YYYY-MM-DD)");
-	            System.out.println("Enter 5 to Update Phone Number");
-	            System.out.println("Enter 6 to Update Email");
-	            System.out.println("Enter 7 to Update Date of Start (YYYY-MM-DD)");
-	            System.out.println("Enter 8 to Go Back to Main Menu");
+	            System.out.println("Enter 5 to Update Date of Start (YYYY-MM-DD)");
+	            System.out.println("Enter 6 to Go Back to Main Menu");
 
 	            System.out.print("Your choice: ");
-	            int choice = scanner.nextInt();
-	            scanner.nextLine(); 
+	            System.out.print("Your choice: ");
+	            int choice = -1;
+
+	            try {
+	                choice = scanner.nextInt();
+	                scanner.nextLine(); // Consume the newline character
+	            } catch (InputMismatchException e) {
+	                System.out.println("Invalid input. Please enter a valid number.");
+	                scanner.nextLine(); // Clear the invalid input from the scanner
+	                continue;
+	            }
 
 	            String fieldName = null;
 	            String newValue = null;
@@ -461,34 +468,6 @@ public class cmpe343project2group4 {
 	                case 5:
 	                	while (true) {
 	                        try {
-	                            System.out.print("Enter new Phone Number: ");
-	                            newValue = scanner.nextLine();
-	                            if (!newValue.matches("\\d+")) { // allow only numbers
-	                                throw new IllegalArgumentException("Phone number must contain only digits.");
-	                            }
-	                            fieldName = "phone_no";
-	                            break; 
-	                        } catch (IllegalArgumentException e) {
-	                            System.out.println(e.getMessage());
-	                        }
-	                    }
-	                    break;
-	                case 6:
-                        while (true) {
-                            System.out.print("Enter New Email: ");
-                            newValue = scanner.nextLine();
-                            
-                            if (newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-                                fieldName = "email"; 
-                                break; 
-                            } else {
-                                System.out.println("Invalid email format. Please try again."); 
-                            }
-                        }
-                        break;
-	                case 7:
-	                	while (true) {
-	                        try {
 	                            System.out.print("Enter new Date of Start (YYYY-MM-DD): ");
 	                            newValue = scanner.nextLine();
 	                            if (!isValidDate(newValue)) { 
@@ -501,7 +480,7 @@ public class cmpe343project2group4 {
 	                        }
 	                    }
 	                    break;
-	                case 8:
+	                case 6:
 	                	System.out.println("Returning to the previous menu...");
 	                    continueUpdate = false;
 	                    continue;
