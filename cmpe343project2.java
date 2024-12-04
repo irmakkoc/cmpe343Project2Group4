@@ -463,10 +463,18 @@ public class cmpe343project2group4 {
 	                    }
 	                    break;
 	                case 6:
-	                		System.out.print("Enter new Email: ");
-	                	    newValue = scanner.nextLine(); 
-	                	    fieldName = "email";
-	                	    break;
+                        while (true) {
+                            System.out.print("Enter New Email: ");
+                            newValue = scanner.nextLine();
+                            
+                            if (newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                                fieldName = "email"; 
+                                break; 
+                            } else {
+                                System.out.println("Invalid email format. Please try again."); 
+                            }
+                        }
+                        break;
 	                case 7:
 	                	while (true) {
 	                        try {
