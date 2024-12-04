@@ -704,8 +704,8 @@ public class cmpe343project2group4 {
     }
 
 
-    private static void displayProfile(String username) {
-        String query = "SELECT password, phone_no, email, role, date_of_birth FROM employees WHERE username = ?";
+        private static void displayProfile(String username) {
+        String query = "SELECT username, role, name, surname, date_of_birth, date_of_start FROM employees WHERE username = ?";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -714,11 +714,12 @@ public class cmpe343project2group4 {
 
             if (resultSet.next()) {
                 System.out.println("\n--- Profile Information ---");
-                System.out.println("Password: " + resultSet.getString("password"));
-                System.out.println("Phone Number: " + resultSet.getString("phone_no"));
-                System.out.println("E-mail: " + resultSet.getString("email"));
+                System.out.println("Username: " + resultSet.getString("username"));
                 System.out.println("Role: " + resultSet.getString("role"));
-                System.out.println("Date of birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Name: " + resultSet.getString("name"));
+                System.out.println("Surname: " + resultSet.getString("surname"));
+                System.out.println("Date of Birth: " + resultSet.getString("date_of_birth"));
+                System.out.println("Date of Start: " + resultSet.getString("date_of_start"));
             } else {
                 System.out.println("Couldn't find the profile.");
             }
