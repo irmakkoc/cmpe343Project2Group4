@@ -1014,7 +1014,6 @@ public class cmpe343project2group4 {
 
     private static Comparator<Integer> getAscendingComparator() {
         return new Comparator<>() {
-            @Override
             public int compare(Integer o1, Integer o2) {
                 return o1 - o2;
             }
@@ -1063,6 +1062,7 @@ public class cmpe343project2group4 {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Enter valid number!");
+		scanner.next();
             }
         }
         return result;
